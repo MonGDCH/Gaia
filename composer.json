@@ -1,0 +1,53 @@
+{
+    "name": "mongdch/gaia",
+    "description": "The Workerman multi worker management framework",
+    "type": "project",
+    "license": "MIT",
+    "homepage": "http://gdmon.com/",
+    "keywords": [
+        "mon",
+        "workerman",
+        "high performance",
+        "multi process"
+    ],
+    "authors": [
+        {
+            "name": "Mon",
+            "email": "985558837@qq.com",
+            "homepage": "http://www.gdmon.com/",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0",
+        "mongdch/gaia-framework": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "app\\": "app/",
+            "support\\": "support/",
+            "process\\": "process/"
+        },
+        "files": [
+            "./support/init.php"
+        ]
+    },
+    "minimum-stability": "dev",
+    "scripts": {
+        "post-package-install": [
+            "support\\Plugin::install"
+        ],
+        "post-package-update": [
+            "support\\Plugin::update"
+        ],
+        "pre-package-uninstall": [
+            "support\\Plugin::uninstall"
+        ]
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.org/"
+        }
+    }
+}
