@@ -20,7 +20,10 @@
     ],
     "require": {
         "php": ">=7.0.0",
-        "mongdch/gaia-framework": "dev-master"
+        "mongdch/gaia-framework": "dev-master",
+        "mongdch/mon-orm": "^2.5",
+        "mongdch/mon-http": "^1.0",
+        "workerman/channel": "^1.1"
     },
     "autoload": {
         "psr-4": {
@@ -33,6 +36,7 @@
         ]
     },
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "scripts": {
         "post-package-install": [
             "support\\Plugin::install"

@@ -8,4 +8,6 @@
 |
 */
 
-return [];
+return [
+    APP_PATH . '/http/router.php'
+];

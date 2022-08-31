@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "71cb3dc9b09c2e138ee585fe0bc7495b",
+    "content-hash": "3d45ece6b679e8b804575a5118433733",
     "packages": [
         {
             "name": "mongdch/gaia-framework",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/gaia-framework.git",
-                "reference": "4fd687e4bcfdebef7e0ad90801fe10c636c10886"
+                "reference": "6831fd7ada144a03945b939164eb30a3f148ca48"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/4fd687e4bcfdebef7e0ad90801fe10c636c10886",
-                "reference": "4fd687e4bcfdebef7e0ad90801fe10c636c10886",
+                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/6831fd7ada144a03945b939164eb30a3f148ca48",
+                "reference": "6831fd7ada144a03945b939164eb30a3f148ca48",
                 "shasum": ""
             },
             "require": {
@@ -56,22 +56,22 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/gaia-framework/issues",
-                "source": "https://github.com/MonGDCH/gaia-framework/tree/master"
+                "source": "https://github.com/MonGDCH/gaia-framework/tree/1.0.0"
             },
-            "time": "2022-08-30T03:02:41+00:00"
+            "time": "2022-08-30T06:56:34+00:00"
         },
         {
             "name": "mongdch/mon-console",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/mon-console.git",
-                "reference": "21b1144784f4c3a9c4fd404eefd35870eec66a5c"
+                "reference": "9ac01b997c25d0b019fe895c112184056f494304"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/mon-console/zipball/21b1144784f4c3a9c4fd404eefd35870eec66a5c",
-                "reference": "21b1144784f4c3a9c4fd404eefd35870eec66a5c",
+                "url": "https://api.github.com/repos/MonGDCH/mon-console/zipball/9ac01b997c25d0b019fe895c112184056f494304",
+                "reference": "9ac01b997c25d0b019fe895c112184056f494304",
                 "shasum": ""
             },
             "require": {
@@ -101,9 +101,9 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/mon-console/issues",
-                "source": "https://github.com/MonGDCH/mon-console/tree/1.1.0"
+                "source": "https://github.com/MonGDCH/mon-console/tree/1.1.1"
             },
-            "time": "2022-08-24T10:09:56+00:00"
+            "time": "2022-08-31T07:15:25+00:00"
         },
         {
             "name": "mongdch/mon-env",
@@ -150,17 +150,117 @@
             "time": "2022-08-17T09:01:36+00:00"
         },
         {
-            "name": "mongdch/mon-util",
-            "version": "1.3.14",
+            "name": "mongdch/mon-http",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/MonGDCH/mon-util.git",
-                "reference": "30d33f2286585e483b99ba872cb331bc5f266f36"
+                "url": "https://github.com/MonGDCH/mon-http.git",
+                "reference": "ec7722fdd37f180fbfd5b8fef1a8618c8f23e023"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/mon-util/zipball/30d33f2286585e483b99ba872cb331bc5f266f36",
-                "reference": "30d33f2286585e483b99ba872cb331bc5f266f36",
+                "url": "https://api.github.com/repos/MonGDCH/mon-http/zipball/ec7722fdd37f180fbfd5b8fef1a8618c8f23e023",
+                "reference": "ec7722fdd37f180fbfd5b8fef1a8618c8f23e023",
+                "shasum": ""
+            },
+            "require": {
+                "mongdch/mon-util": "^1.3",
+                "nikic/fast-route": "^1.3",
+                "php": ">=7.0.0",
+                "workerman/workerman": "^4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "mon\\http\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mon",
+                    "email": "985558837@qq.com",
+                    "homepage": "http://www.gdmon.com/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "The Workerman HTTP Server",
+            "homepage": "http://gdmon.com/",
+            "keywords": [
+                "http server",
+                "mon",
+                "workerman"
+            ],
+            "support": {
+                "issues": "https://github.com/MonGDCH/mon-http/issues",
+                "source": "https://github.com/MonGDCH/mon-http/tree/1.0.0"
+            },
+            "time": "2022-08-30T02:50:56+00:00"
+        },
+        {
+            "name": "mongdch/mon-orm",
+            "version": "2.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MonGDCH/mon-orm.git",
+                "reference": "e632a9b93a8d682714c7c94a9a9836de28272598"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MonGDCH/mon-orm/zipball/e632a9b93a8d682714c7c94a9a9836de28272598",
+                "reference": "e632a9b93a8d682714c7c94a9a9836de28272598",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pdo": ">=1.0.0",
+                "mongdch/mon-util": "^1.2",
+                "php": ">=5.6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "mon\\orm\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "MonGDCH",
+                    "email": "985558837@qq.com"
+                }
+            ],
+            "description": "Mysql database ORM for PHP",
+            "homepage": "http://gdmon.com/",
+            "keywords": [
+                "database",
+                "mysql",
+                "orm",
+                "数据库"
+            ],
+            "support": {
+                "issues": "https://github.com/MonGDCH/mon-orm/issues",
+                "source": "https://github.com/MonGDCH/mon-orm/tree/2.5.1"
+            },
+            "time": "2022-07-14T06:03:57+00:00"
+        },
+        {
+            "name": "mongdch/mon-util",
+            "version": "1.3.15",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MonGDCH/mon-util.git",
+                "reference": "c7185c47d210bb86b5e4a57f5aa24c13cc236e84"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MonGDCH/mon-util/zipball/c7185c47d210bb86b5e4a57f5aa24c13cc236e84",
+                "reference": "c7185c47d210bb86b5e4a57f5aa24c13cc236e84",
                 "shasum": ""
             },
             "require": {
@@ -196,9 +296,59 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/mon-util/issues",
-                "source": "https://github.com/MonGDCH/mon-util/tree/1.3.14"
+                "source": "https://github.com/MonGDCH/mon-util/tree/1.3.15"
             },
-            "time": "2022-08-25T08:31:42+00:00"
+            "time": "2022-08-31T07:16:00+00:00"
+        },
+        {
+            "name": "nikic/fast-route",
+            "version": "v1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nikic/FastRoute.git",
+                "reference": "181d480e08d9476e61381e04a71b34dc0432e812"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nikic/FastRoute/zipball/181d480e08d9476e61381e04a71b34dc0432e812",
+                "reference": "181d480e08d9476e61381e04a71b34dc0432e812",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.35|~5.7"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "FastRoute\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Nikita Popov",
+                    "email": "nikic@php.net"
+                }
+            ],
+            "description": "Fast request router for PHP",
+            "keywords": [
+                "router",
+                "routing"
+            ],
+            "support": {
+                "issues": "https://github.com/nikic/FastRoute/issues",
+                "source": "https://github.com/nikic/FastRoute/tree/master"
+            },
+            "time": "2018-02-13T20:26:39+00:00"
         },
         {
             "name": "psr/container",
@@ -304,8 +454,42 @@
             "time": "2021-05-03T11:20:27+00:00"
         },
         {
+            "name": "workerman/channel",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/walkor/channel.git",
+                "reference": "3df772d0d20d4cebfcfd621c33d1a1ab732db523"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/walkor/channel/zipball/3df772d0d20d4cebfcfd621c33d1a1ab732db523",
+                "reference": "3df772d0d20d4cebfcfd621c33d1a1ab732db523",
+                "shasum": ""
+            },
+            "require": {
+                "workerman/workerman": ">=4.0.12"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Channel\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "homepage": "http://www.workerman.net",
+            "support": {
+                "issues": "https://github.com/walkor/channel/issues",
+                "source": "https://github.com/walkor/channel/tree/v1.1.0"
+            },
+            "time": "2021-02-08T02:45:42+00:00"
+        },
+        {
             "name": "workerman/workerman",
-            "version": "4.1.x-dev",
+            "version": "v4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/walkor/workerman.git",
@@ -373,7 +557,7 @@
     "stability-flags": {
         "mongdch/gaia-framework": 20
     },
-    "prefer-stable": false,
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": ">=7.0.0"
