@@ -29,7 +29,7 @@
             "process\\": "process/"
         },
         "files": [
-            "./support/init.php"
+            "./support/bootstrap.php"
         ]
     },
     "minimum-stability": "dev",
