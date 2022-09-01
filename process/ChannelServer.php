@@ -53,7 +53,6 @@ class ChannelServer extends Server implements Process
      */
     public function onWorkerStart(Worker $worker)
     {
-        var_dump(__CLASS__);
         $this->_worker = $worker;
         $this->channels = [];
     }

@@ -10,6 +10,7 @@ use mon\env\Config;
 use Workerman\Worker;
 use mon\util\Container;
 use mon\http\Middleware;
+use mon\http\Route;
 
 /**
  * HTTP进程服务
@@ -17,7 +18,7 @@ use mon\http\Middleware;
  * @author Mon <985558837@qq.com>
  * @version 1.0.0
  */
-class Http extends Process
+class TestHttp extends Process
 {
     /**
      * 进程配置
@@ -26,7 +27,7 @@ class Http extends Process
      */
     protected static $processConfig = [
         // 监听协议断开
-        'listen'    => 'http://0.0.0.0:8686',
+        'listen'    => 'http://0.0.0.0:8787',
         // 通信协议
         'transport' => 'tcp',
         // 额外参数
@@ -56,7 +57,14 @@ class Http extends Process
         $appConfig = $httpConfig['app'];
         $errorHandler = Container::instance()->get($appConfig['exception']);
         // 初始化HTTP服务器
-        $app = App::instance()->init($worker, $errorHandler, $debug);
+        $app = new App;
+        $app->init($worker, $errorHandler, $debug);
+        // 绑定路由
+        $route = new Route;
+        $route->get('/', function () {
+            return 'test';
+        });
+        $app->bindRoute($route);
 
         // 应用扩展支持
         $app->suppertCallback($appConfig['reusecall'], $appConfig['request'], $appConfig['max_cache']);

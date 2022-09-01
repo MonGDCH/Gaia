@@ -21,8 +21,7 @@
     "require": {
         "php": ">=7.0.0",
         "mongdch/gaia-framework": "dev-master",
-        "mongdch/mon-orm": "^2.5",
-        "mongdch/mon-http": "^1.0",
+        "mongdch/mon-http": "dev-master",
         "workerman/channel": "^1.1"
     },
     "autoload": {
@@ -32,7 +31,7 @@
             "process\\": "process/"
         },
         "files": [
-            "./support/init.php"
+            "./support/bootstrap.php"
         ]
     },
     "minimum-stability": "dev",

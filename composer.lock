@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3d45ece6b679e8b804575a5118433733",
+    "content-hash": "24585c83405384be8fd446bdc576a0e2",
     "packages": [
         {
             "name": "mongdch/gaia-framework",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/gaia-framework.git",
-                "reference": "6831fd7ada144a03945b939164eb30a3f148ca48"
+                "reference": "92da34225fa055cb009f8e713b68e579ce231d5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/6831fd7ada144a03945b939164eb30a3f148ca48",
-                "reference": "6831fd7ada144a03945b939164eb30a3f148ca48",
+                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/92da34225fa055cb009f8e713b68e579ce231d5d",
+                "reference": "92da34225fa055cb009f8e713b68e579ce231d5d",
                 "shasum": ""
             },
             "require": {
@@ -56,9 +56,9 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/gaia-framework/issues",
-                "source": "https://github.com/MonGDCH/gaia-framework/tree/1.0.0"
+                "source": "https://github.com/MonGDCH/gaia-framework/tree/master"
             },
-            "time": "2022-08-30T06:56:34+00:00"
+            "time": "2022-09-01T08:27:27+00:00"
         },
         {
             "name": "mongdch/mon-console",
@@ -151,16 +151,16 @@
         },
         {
             "name": "mongdch/mon-http",
-            "version": "1.0.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/mon-http.git",
-                "reference": "ec7722fdd37f180fbfd5b8fef1a8618c8f23e023"
+                "reference": "743e5371cf0d8f682b0db7b3d7f9d0a5aa8519c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/mon-http/zipball/ec7722fdd37f180fbfd5b8fef1a8618c8f23e023",
-                "reference": "ec7722fdd37f180fbfd5b8fef1a8618c8f23e023",
+                "url": "https://api.github.com/repos/MonGDCH/mon-http/zipball/743e5371cf0d8f682b0db7b3d7f9d0a5aa8519c5",
+                "reference": "743e5371cf0d8f682b0db7b3d7f9d0a5aa8519c5",
                 "shasum": ""
             },
             "require": {
@@ -169,6 +169,7 @@
                 "php": ">=7.0.0",
                 "workerman/workerman": "^4.0"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -196,71 +197,22 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/mon-http/issues",
-                "source": "https://github.com/MonGDCH/mon-http/tree/1.0.0"
+                "source": "https://github.com/MonGDCH/mon-http/tree/master"
             },
-            "time": "2022-08-30T02:50:56+00:00"
-        },
-        {
-            "name": "mongdch/mon-orm",
-            "version": "2.5.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/MonGDCH/mon-orm.git",
-                "reference": "e632a9b93a8d682714c7c94a9a9836de28272598"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/mon-orm/zipball/e632a9b93a8d682714c7c94a9a9836de28272598",
-                "reference": "e632a9b93a8d682714c7c94a9a9836de28272598",
-                "shasum": ""
-            },
-            "require": {
-                "ext-pdo": ">=1.0.0",
-                "mongdch/mon-util": "^1.2",
-                "php": ">=5.6.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "mon\\orm\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "MonGDCH",
-                    "email": "985558837@qq.com"
-                }
-            ],
-            "description": "Mysql database ORM for PHP",
-            "homepage": "http://gdmon.com/",
-            "keywords": [
-                "database",
-                "mysql",
-                "orm",
-                "数据库"
-            ],
-            "support": {
-                "issues": "https://github.com/MonGDCH/mon-orm/issues",
-                "source": "https://github.com/MonGDCH/mon-orm/tree/2.5.1"
-            },
-            "time": "2022-07-14T06:03:57+00:00"
+            "time": "2022-09-01T10:22:34+00:00"
         },
         {
             "name": "mongdch/mon-util",
-            "version": "1.3.15",
+            "version": "1.3.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/mon-util.git",
-                "reference": "c7185c47d210bb86b5e4a57f5aa24c13cc236e84"
+                "reference": "8e087adc011ab4fb9291ff2d076bd90afe4930ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/mon-util/zipball/c7185c47d210bb86b5e4a57f5aa24c13cc236e84",
-                "reference": "c7185c47d210bb86b5e4a57f5aa24c13cc236e84",
+                "url": "https://api.github.com/repos/MonGDCH/mon-util/zipball/8e087adc011ab4fb9291ff2d076bd90afe4930ae",
+                "reference": "8e087adc011ab4fb9291ff2d076bd90afe4930ae",
                 "shasum": ""
             },
             "require": {
@@ -296,9 +248,9 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/mon-util/issues",
-                "source": "https://github.com/MonGDCH/mon-util/tree/1.3.15"
+                "source": "https://github.com/MonGDCH/mon-util/tree/1.3.16"
             },
-            "time": "2022-08-31T07:16:00+00:00"
+            "time": "2022-09-01T02:49:04+00:00"
         },
         {
             "name": "nikic/fast-route",
@@ -555,7 +507,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "mongdch/gaia-framework": 20
+        "mongdch/gaia-framework": 20,
+        "mongdch/mon-http": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

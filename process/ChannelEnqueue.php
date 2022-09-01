@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace process;
 
 use gaia\Process;
-use Channel\Client;
 use mon\util\Log;
+use Channel\Client;
 use Workerman\Worker;
 
 /**
@@ -55,6 +55,6 @@ class ChannelEnqueue extends Process
      */
     public function log(string $log)
     {
-        Log::instance()->debug($log, [], true);
+        Log::instance()->debug($log, [], false);
     }
 }

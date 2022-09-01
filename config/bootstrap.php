@@ -9,5 +9,5 @@
 
 return [
     \app\bootstrap\Channel::class,
-    \app\bootstrap\DataBase::class
+    // \app\bootstrap\DataBase::class
 ];

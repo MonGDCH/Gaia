@@ -22,7 +22,6 @@ class Index
      */
     public function index(Request $request)
     {
-        Client::connect();
         Client::enqueue('log', 'test => ' . random_int(1, 100));
         return 'Hello Controller!';
     }

@@ -152,11 +152,11 @@ class Plugin
     protected static function init()
     {
         // Plugin.php in vendor
-        $file = __DIR__ . '/../../../../../support/init.php';
+        $file = __DIR__ . '/../../../../../support/bootstrap.php';
         if (is_file($file)) {
             require_once $file;
             return;
         }
-        require_once __DIR__ . '/init.php';
+        require_once __DIR__ . '/bootstrap.php';
     }
 }
