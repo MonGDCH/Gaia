@@ -155,12 +155,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/mon-http.git",
-                "reference": "743e5371cf0d8f682b0db7b3d7f9d0a5aa8519c5"
+                "reference": "0453b230ee89031bfd66779aa0a6f842864fc012"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/mon-http/zipball/743e5371cf0d8f682b0db7b3d7f9d0a5aa8519c5",
-                "reference": "743e5371cf0d8f682b0db7b3d7f9d0a5aa8519c5",
+                "url": "https://api.github.com/repos/MonGDCH/mon-http/zipball/0453b230ee89031bfd66779aa0a6f842864fc012",
+                "reference": "0453b230ee89031bfd66779aa0a6f842864fc012",
                 "shasum": ""
             },
             "require": {
@@ -199,20 +199,20 @@
                 "issues": "https://github.com/MonGDCH/mon-http/issues",
                 "source": "https://github.com/MonGDCH/mon-http/tree/master"
             },
-            "time": "2022-09-01T10:22:34+00:00"
+            "time": "2022-09-02T03:13:11+00:00"
         },
         {
             "name": "mongdch/mon-util",
-            "version": "1.3.16",
+            "version": "1.3.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/mon-util.git",
-                "reference": "8e087adc011ab4fb9291ff2d076bd90afe4930ae"
+                "reference": "1c1c52dc1cbb04933814369de656a026622c0b12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/mon-util/zipball/8e087adc011ab4fb9291ff2d076bd90afe4930ae",
-                "reference": "8e087adc011ab4fb9291ff2d076bd90afe4930ae",
+                "url": "https://api.github.com/repos/MonGDCH/mon-util/zipball/1c1c52dc1cbb04933814369de656a026622c0b12",
+                "reference": "1c1c52dc1cbb04933814369de656a026622c0b12",
                 "shasum": ""
             },
             "require": {
@@ -248,9 +248,9 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/mon-util/issues",
-                "source": "https://github.com/MonGDCH/mon-util/tree/1.3.16"
+                "source": "https://github.com/MonGDCH/mon-util/tree/1.3.17"
             },
-            "time": "2022-09-01T02:49:04+00:00"
+            "time": "2022-09-02T08:51:21+00:00"
         },
         {
             "name": "nikic/fast-route",

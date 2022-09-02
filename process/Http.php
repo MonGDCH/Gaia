@@ -26,7 +26,7 @@ class Http extends Process
      */
     protected static $processConfig = [
         // 监听协议断开
-        'listen'    => 'http://0.0.0.0:8686',
+        'listen'    => 'http://0.0.0.0:8080',
         // 通信协议
         'transport' => 'tcp',
         // 额外参数
@@ -56,7 +56,8 @@ class Http extends Process
         $appConfig = $httpConfig['app'];
         $errorHandler = Container::instance()->get($appConfig['exception']);
         // 初始化HTTP服务器
-        $app = App::instance()->init($worker, $errorHandler, $debug);
+        $app = new App;
+        $app->init($worker, $errorHandler, $debug);
 
         // 应用扩展支持
         $app->suppertCallback($appConfig['reusecall'], $appConfig['request'], $appConfig['max_cache']);
@@ -73,7 +74,22 @@ class Http extends Process
         $middlewareConfig = $httpConfig['middleware'];
         Middleware::instance()->load($middlewareConfig);
 
+        // 注册路由
+        $this->registerRoute($app->route());
+
         // 绑定响应请求
         $worker->onMessage = [$app, 'onMessage'];
+    }
+
+    /**
+     * 注册路由
+     *
+     * @param Route $route
+     * @return void
+     */
+    protected function registerRoute(\mon\http\Route $route)
+    {
+        // 注册路由
+        require APP_PATH . '/http/router.php';
     }
 }

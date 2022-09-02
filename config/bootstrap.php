@@ -8,6 +8,5 @@
 */
 
 return [
-    \app\bootstrap\Channel::class,
     // \app\bootstrap\DataBase::class
 ];

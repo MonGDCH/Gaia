@@ -6,7 +6,7 @@ namespace app\http\controller;
 
 use mon\http\Request;
 use app\model\UserModel;
-use Channel\Client;
+use app\service\LogService;
 use mon\env\Config;
 
 /**
@@ -22,7 +22,8 @@ class Index
      */
     public function index(Request $request)
     {
-        Client::enqueue('log', 'test => ' . random_int(1, 100));
+        LogService::instance()->send('info', 'test123', 'http', true);
+        LogService::instance()->debug('test debug', 'http', true);
         return 'Hello Controller!';
     }
 

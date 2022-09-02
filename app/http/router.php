@@ -7,14 +7,14 @@
 |
 */
 
-use mon\http\Route;
 use mon\http\Request;
 use app\http\controller\Index;
 
-Route::instance()->get('/', function (Request $request) {
-    return 'Hello Gaia';
+/** @var \mon\http\Route $route */
+$route->get('/', function (Request $request) {
+    return 'Hello Gaia!';
 });
 
-Route::instance()->get('/index', [Index::class, 'index']);
+$route->get('/index', [Index::class, 'index']);
 
-Route::instance()->get('/list', [Index::class, 'list']);
+$route->get('/list', [Index::class, 'list']);
