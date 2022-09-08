@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace process;
 
+use mon\orm\Db;
 use gaia\Process;
 use mon\http\App;
 use mon\env\Config;
+use Workerman\Timer;
 use Workerman\Worker;
 use mon\util\Container;
 use mon\http\Middleware;
+use app\service\LogService;
 
 /**
  * HTTP进程服务
@@ -19,6 +22,13 @@ use mon\http\Middleware;
  */
 class Http extends Process
 {
+    /**
+     * 启用进程
+     *
+     * @var boolean
+     */
+    protected static $enable = true;
+
     /**
      * 进程配置
      *
@@ -51,7 +61,7 @@ class Http extends Process
     {
         // 运行模式
         $debug = Config::instance()->get('app.debug', true);
-
+        // 获取配置
         $httpConfig = Config::instance()->get('http');
         $appConfig = $httpConfig['app'];
         $errorHandler = Container::instance()->get($appConfig['exception']);
@@ -77,6 +87,9 @@ class Http extends Process
         // 注册路由
         $this->registerRoute($app->route());
 
+        // 注册数据库
+        $this->registerDatabase();
+
         // 绑定响应请求
         $worker->onMessage = [$app, 'onMessage'];
     }
@@ -90,6 +103,45 @@ class Http extends Process
     protected function registerRoute(\mon\http\Route $route)
     {
         // 注册路由
+        // $route->get('/', function (\mon\http\Request $request) {
+        //     return 'Hello World!';
+        // });
+
+        // 建议require一个路由文件进行定义，支持monitor更新
         require APP_PATH . '/http/router.php';
+    }
+
+    /**
+     * 注册数据库连接
+     *
+     * @return void
+     */
+    protected function registerDatabase()
+    {
+        // 定义配置
+        $config = Config::instance()->get('database', []);
+        Db::setConfig($config);
+        // 绑定事件
+        Db::listen('connect', function ($dbConnect, $dbConfig) {
+            // 连接数据库
+            $log = "connect database => mysql:host={$dbConfig['host']};port={$dbConfig['port']};dbname={$dbConfig['database']};charset={$dbConfig['charset']}";
+            LogService::instance()->send('sql', $log, 'http');
+        });
+        Db::listen('query', function ($dbConnect, $dbConfig) {
+            // SQL查询
+            LogService::instance()->send('sql', $dbConnect->getLastSql(), 'http');
+        });
+        Db::listen('execute', function ($dbConnect, $dbConfig) {
+            // SQL执行
+            LogService::instance()->send('sql', $dbConnect->getLastSql(), 'http');
+        });
+        // 打开长链接
+        Db::reconnect(true);
+        // 每分钟轮训查询一次，确保不断开
+        Timer::add(55, function () use ($config) {
+            foreach ($config as $key => $value) {
+                Db::connect($key)->query('SELECT 1');
+            }
+        });
     }
 }

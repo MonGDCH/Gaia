@@ -10,6 +10,9 @@ use mon\util\Instance;
 
 /**
  * 日志服务
+ * 
+ * @author Mon <985558837@qq.com>
+ * @version 1.0.0
  */
 class LogService
 {

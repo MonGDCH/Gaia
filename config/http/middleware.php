@@ -9,7 +9,9 @@
 
 return [
     // http服务中间件
-    '__app__'       => [],
+    '__app__'       => [
+        \app\http\middleware\RequestLog::class
+    ],
     // 静态资源服务中间件
     '__static__'    => []
 ];

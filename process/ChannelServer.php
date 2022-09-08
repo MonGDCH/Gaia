@@ -29,6 +29,16 @@ class ChannelServer extends Server implements Process
     ];
 
     /**
+     * 是否启用进程
+     *
+     * @return boolean
+     */
+    public static function enable(): bool
+    {
+        return true;
+    }
+
+    /**
      * 获取进程配置
      *
      * @return array

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "24585c83405384be8fd446bdc576a0e2",
+    "content-hash": "11516fb55e33ac10b5ea1e02ffa10df3",
     "packages": [
         {
             "name": "mongdch/gaia-framework",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/gaia-framework.git",
-                "reference": "92da34225fa055cb009f8e713b68e579ce231d5d"
+                "reference": "f1b66023087c7ad498c53729216a2116872e0bfc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/92da34225fa055cb009f8e713b68e579ce231d5d",
-                "reference": "92da34225fa055cb009f8e713b68e579ce231d5d",
+                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/f1b66023087c7ad498c53729216a2116872e0bfc",
+                "reference": "f1b66023087c7ad498c53729216a2116872e0bfc",
                 "shasum": ""
             },
             "require": {
@@ -58,7 +58,56 @@
                 "issues": "https://github.com/MonGDCH/gaia-framework/issues",
                 "source": "https://github.com/MonGDCH/gaia-framework/tree/master"
             },
-            "time": "2022-09-01T08:27:27+00:00"
+            "time": "2022-09-08T02:16:22+00:00"
+        },
+        {
+            "name": "mongdch/mon-auth",
+            "version": "1.0.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MonGDCH/mon-auth.git",
+                "reference": "0e73d60575a279c062b24cfceb81d2d657774b8d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MonGDCH/mon-auth/zipball/0e73d60575a279c062b24cfceb81d2d657774b8d",
+                "reference": "0e73d60575a279c062b24cfceb81d2d657774b8d",
+                "shasum": ""
+            },
+            "require": {
+                "mongdch/mon-orm": "^2.4",
+                "mongdch/mon-util": "^1.3",
+                "php": ">=5.6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "mon\\auth\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "MonGDCH",
+                    "email": "985558837@qq.com"
+                }
+            ],
+            "description": "PHP权限控制库",
+            "homepage": "http://blog.gdmon.com/",
+            "keywords": [
+                "jwt",
+                "mon",
+                "php",
+                "rbac"
+            ],
+            "support": {
+                "issues": "https://github.com/MonGDCH/mon-auth/issues",
+                "source": "https://github.com/MonGDCH/mon-auth/tree/1.0.11"
+            },
+            "time": "2022-07-18T06:58:51+00:00"
         },
         {
             "name": "mongdch/mon-console",
@@ -200,6 +249,55 @@
                 "source": "https://github.com/MonGDCH/mon-http/tree/master"
             },
             "time": "2022-09-02T03:13:11+00:00"
+        },
+        {
+            "name": "mongdch/mon-orm",
+            "version": "2.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MonGDCH/mon-orm.git",
+                "reference": "e632a9b93a8d682714c7c94a9a9836de28272598"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MonGDCH/mon-orm/zipball/e632a9b93a8d682714c7c94a9a9836de28272598",
+                "reference": "e632a9b93a8d682714c7c94a9a9836de28272598",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pdo": ">=1.0.0",
+                "mongdch/mon-util": "^1.2",
+                "php": ">=5.6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "mon\\orm\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "MonGDCH",
+                    "email": "985558837@qq.com"
+                }
+            ],
+            "description": "Mysql database ORM for PHP",
+            "homepage": "http://gdmon.com/",
+            "keywords": [
+                "database",
+                "mysql",
+                "orm",
+                "数据库"
+            ],
+            "support": {
+                "issues": "https://github.com/MonGDCH/mon-orm/issues",
+                "source": "https://github.com/MonGDCH/mon-orm/tree/2.5.1"
+            },
+            "time": "2022-07-14T06:03:57+00:00"
         },
         {
             "name": "mongdch/mon-util",
@@ -516,5 +614,5 @@
         "php": ">=7.0.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.1.0"
 }

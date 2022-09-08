@@ -7,6 +7,4 @@
 |
 */
 
-return [
-    // \app\bootstrap\DataBase::class
-];
+return [];

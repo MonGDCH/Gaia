@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace process;
 
 use gaia\Process;
+use mon\util\File;
 use Channel\Client;
 use mon\env\Config;
 use Workerman\Worker;
@@ -18,6 +19,13 @@ use app\libs\LogFactory;
  */
 class ChannelLog extends Process
 {
+    /**
+     * 启用进程
+     *
+     * @var boolean
+     */
+    protected static $enable = true;
+
     /**
      * 进程配置
      *
@@ -35,8 +43,15 @@ class ChannelLog extends Process
      */
     public function onWorkerStart(Worker $worker)
     {
-        // 注册日志工厂
+        // 获取日志配置
         $config = Config::instance()->get('log', []);
+        // 第一个进程创建日志目录，防止多进程争抢文件句柄
+        if ($worker->id == 0) {
+            foreach ($config as $logConfig) {
+                File::instance()->createDir($logConfig['logPath']);
+            }
+        }
+        // 注册日志工厂
         LogFactory::instance()->loadChannel($config);
         // 监听记录日志
         Client::connect();
