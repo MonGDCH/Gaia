@@ -6,6 +6,7 @@ namespace app\http\controller;
 
 use mon\http\Request;
 use app\model\UserModel;
+use app\service\CacheService;
 use app\service\LogService;
 use mon\env\Config;
 
@@ -22,8 +23,7 @@ class Index
      */
     public function index(Request $request)
     {
-        LogService::instance()->send('info', 'test123', 'http', true);
-        LogService::instance()->debug('test debug', 'http', true);
+        CacheService::instance()->set('a', 123);
         return 'Hello Controller!';
     }
 

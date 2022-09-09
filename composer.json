@@ -24,7 +24,8 @@
         "mongdch/gaia-framework": "dev-master",
         "mongdch/mon-http": "dev-master",
         "mongdch/mon-orm": "^2.5",
-        "mongdch/mon-auth": "^1.0"
+        "mongdch/mon-auth": "^1.0",
+        "mongdch/mon-cache": "dev-master"
     },
     "autoload": {
         "psr-4": {

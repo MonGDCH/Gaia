@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace app\service;
 
-// use Laf\Cache;
 use mon\env\Config;
 use mon\util\Common;
 use mon\util\Network;
@@ -79,7 +80,7 @@ class WechatService
      * @param string $mchid     商户ID
      * @param string $mch_key   商户KEY
      */
-    public function __construct($config = [])
+    public function __construct(array $config = [])
     {
         if (empty($config)) {
             $config = Config::instance()->get('wechat');
@@ -108,9 +109,9 @@ class WechatService
      * 获取用户OpenID
      *
      * @param  string $code 小程序返回的code码
-     * @return mixed
+     * @return string|false
      */
-    public function getOpenid($code)
+    public function getOpenid(string $code)
     {
         $data = [
             'appid'         => $this->appid,
@@ -132,15 +133,16 @@ class WechatService
     /**
      * 获取小程序全局唯一后台接口调用凭据
      *
-     * @return mixed
+     * @return string|false
      */
     public function getAccessToken()
     {
         // 先判断是否存在缓存
-        // $cache = Cache::instance()->get('access_token');
-        // if ($cache) {
-        //     return $cache;
-        // }
+        $key = 'access_token';
+        $cache = CacheService::instance()->get($key);
+        if ($cache) {
+            return $cache;
+        }
 
         // 不存在缓存，发起请求获取
         $data = [
@@ -157,7 +159,7 @@ class WechatService
         }
 
         // 缓存
-        // Cache::instance()->set('access_token', $res['access_token'], $res['expires_in']);
+        CacheService::instance()->set($key, $res['access_token'], $res['expires_in']);
         return $res['access_token'];
     }
 
@@ -165,10 +167,17 @@ class WechatService
      * 获取用户Access_Token
      *
      * @param  string $code 小程序返回的code码
-     * @return mixed
+     * @return string|false
      */
-    public function getUserAccessToken($code)
+    public function getUserAccessToken(string $code)
     {
+        // 先判断是否存在缓存
+        $key = 'token_' . $code;
+        $cache = CacheService::instance()->get($key);
+        if ($cache) {
+            return $cache;
+        }
+
         $data = [
             'appid'      => $this->appid,
             'secret'     => $this->secret,
@@ -190,21 +199,23 @@ class WechatService
         //     "openid":"OPENID",
         //     "scope":"SCOPE" 
         // }
+        CacheService::instance()->set($key, $res['access_token'], $res['expires_in']);
         return $res;
     }
 
     /**
      * 获取jsapi_ticket，公众号用于调用微信JS接口的临时票据
      *
-     * @return mixed
+     * @return string|false
      */
     public function getJsApiTicket()
     {
         // 先判断是否存在缓存
-        // $cache = Cache::instance()->get('jsapi_ticket');
-        // if ($cache) {
-        //     return $cache;
-        // }
+        $key = 'jsapi_ticket';
+        $cache = CacheService::instance()->get($key);
+        if ($cache) {
+            return $cache;
+        }
 
         $data = [
             'type'          => 'jsapi',
@@ -218,7 +229,7 @@ class WechatService
         }
 
         // 缓存
-        // Cache::instance()->set('ticket', $res['ticket'], $res['expires_in']);
+        CacheService::instance()->set($key, $res['ticket'], $res['expires_in']);
         return $res['ticket'];
     }
 
@@ -226,9 +237,9 @@ class WechatService
      * 获取js-sdk使用签名
      *
      * @param string $url 执行js的URL
-     * @return mixed
+     * @return array
      */
-    public function getJsSign($url = '')
+    public function getJsSign(string $url = ''): array
     {
         // 获取jsapi_ticket
         $ticket = $this->getJsApiTicket();
@@ -257,9 +268,9 @@ class WechatService
      *
      * @param  string $code 小程序返回的code码
      * @param  string $lang 语言类型
-     * @return mixed
+     * @return array|false
      */
-    public function getUserInfo($code, $lang = 'zh_CN')
+    public function getUserInfo(string $code, string $lang = 'zh_CN')
     {
         $user_access_token = $this->getUserAccessToken($code);
         if (!$user_access_token) {
@@ -301,7 +312,7 @@ class WechatService
      * @param  string $content 文本内容
      * @return boolean
      */
-    public function msgSecCheck($content)
+    public function msgSecCheck(string $content): bool
     {
         $access_token = $this->getAccessToken();
         if (!$access_token) {
@@ -324,36 +335,39 @@ class WechatService
     /**
      * JSApi发起支付请求
      *
-     * @param  string  $body             内容
-     * @param  integer $total_fee        价格，单位分
-     * @param  string  $order_id         订单ID
-     * @param  string  $openid           用户openid
-     * @param  string  $notify_url       通知回调路径 
-     * @return mixed
+     * @param  string  $body        内容
+     * @param  integer $total_fee   价格，单位分
+     * @param  string  $order_id    订单ID
+     * @param  string  $openid      用户openid
+     * @param  string  $notify_url  通知回调路径 
+     * @param  string  $server_addr 当前服务器IP地址，默认 $_SERVER['SERVER_ADDR']
+     * @return array|false
      */
-    public function jsApiPay($body, $total_fee, $order_id, $openid, $notify_url = '')
+    public function jsApiPay(string $body, int $total_fee, string $order_id, string $openid, string $notify_url = '', string $server_addr = '')
     {
         // 随机字符串
         $nonce_str = Common::instance()->randString(32);
-        //服务器终端的ip
-        $spbill_create_ip = $_SERVER['SERVER_ADDR'];
+        // 服务端的ip
+        $spbill_create_ip = $server_addr ?: $_SERVER['SERVER_ADDR'];
         // 统一下单
         $orders = $this->orders($spbill_create_ip, $body, $total_fee, $order_id, 'JSAPI', $openid, $nonce_str, $notify_url);
         if (!$orders) {
             return false;
         }
 
-        // 结果集
-        $data = [];
+        // 获取当前时间戳
+        $time = time();
+
         //临时数组用于签名
         $tmp = [];
-        $time = time();
         $tmp['appId'] = $this->appid;
         $tmp['nonceStr'] = $nonce_str;
         $tmp['package'] = 'prepay_id=' . $orders['PREPAY_ID'];
         $tmp['signType'] = 'MD5';
         $tmp['timeStamp'] = (string) $time;
 
+        // 结果集
+        $data = [];
         $data['state'] = 1;
         $data['timeStamp'] = (string) $time;
         $data['nonceStr'] = $nonce_str;
@@ -368,18 +382,19 @@ class WechatService
     /**
      * h5支付
      *
-     * @param  string  $body             内容
-     * @param  integer $total_fee        价格，单位分
-     * @param  string  $order_id         订单ID
-     * @param  string  $notify_url       通知回调路径 
-     * @return mixed
+     * @param  string  $body        内容
+     * @param  integer $total_fee   价格，单位分
+     * @param  string  $order_id    订单ID
+     * @param  string  $notify_url  通知回调路径 
+     * @param  string  $remote_addr 客户端IP地址，默认 $_SERVER['REMOTE_ADDR']
+     * @return array|false
      */
-    public function h5Pay($body, $total_fee, $order_id, $notify_url = '')
+    public function h5Pay(string $body, int $total_fee, string $order_id, string $notify_url = '', string $remote_addr = '')
     {
         // 随机字符串
         $nonce_str = Common::instance()->randString(32);
         //客户终端的ip
-        $spbill_create_ip = $_SERVER['REMOTE_ADDR'];
+        $spbill_create_ip = $remote_addr ?: $_SERVER['REMOTE_ADDR'];
         // 统一下单
         $orders = $this->orders($spbill_create_ip, $body, $total_fee, $order_id, 'MWEB', '', $nonce_str, $notify_url);
         if (!$orders) {
@@ -400,11 +415,12 @@ class WechatService
      * @param  string  $openid           用户openid
      * @param  string  $nonce_str        随机字符串
      * @param  string  $notify_url       回调通知路径
-     * @return mixed
+     * @return array|false
      */
-    public function orders($spbill_create_ip, $body, $total_fee, $order_id, $trade_type, $openid, $nonce_str, $notify_url)
+    public function orders(string $spbill_create_ip, string $body, int $total_fee, string $order_id, string $trade_type, string $openid, string $nonce_str, string $notify_url)
     {
         // 这里是按照顺序的 因为下面的签名是按照(字典序)顺序 排序错误 肯定出错
+        $post = [];
         $post['appid'] = $this->appid;
         $post['body'] = $body;
         $post['mch_id'] = $this->mchid;
@@ -439,14 +455,14 @@ class WechatService
         $url = $this->api['prepay'];
         $xml = Network::instance()->sendHTTP($url, $post_xml, 'post');
         // 将【统一下单】api返回xml数据转换成数组，全要大写
-        $array = Common::instance()->xml2array($xml);
+        $array = Common::instance()->xmlToArr($xml);
         if ($array['RETURN_CODE'] == 'SUCCESS' && $array['RESULT_CODE'] == 'SUCCESS') {
             // 成功，返回结果集
             return $array;
-        } else {
-            $this->error = $array['RETURN_MSG'];
-            return false;
         }
+
+        $this->error = $array['RETURN_MSG'];
+        return false;
     }
 
     /**
@@ -456,7 +472,7 @@ class WechatService
      * @param string $transaction_id    微信订单号
      * @return boolean
      */
-    public function queryOrder($out_trade_no = null, $transaction_id = null)
+    public function queryOrder(string $out_trade_no = null, string $transaction_id = null): bool
     {
         $nonce_str = Common::instance()->randString(32);
         $post['appid'] = $this->appid;
@@ -482,7 +498,7 @@ class WechatService
         $post_xml .= '<sign>' . $sign . '</sign></xml>';
         $xml = Network::instance()->sendHTTP($this->api['query_order'], $post_xml, 'post');
         // 将【统一下单】api返回xml数据转换成数组，全要大写
-        $array = Common::instance()->xml2array($xml);
+        $array = Common::instance()->xmlToArr($xml);
         if (array_key_exists("RETURN_CODE", (array) $array) && array_key_exists("RESULT_CODE", (array) $array) && $array["RETURN_CODE"] == "SUCCESS" && $array["RESULT_CODE"] == "SUCCESS") {
             return true;
         }
@@ -494,12 +510,13 @@ class WechatService
     /**
      * 发送服务号模板消息
      *
-     * @param string $temp_id 模板ID
-     * @param string $toUser 接收用户openID
-     * @param array $data 模板数据
-     * @return boolean
+     * @param string $temp_id   模板ID
+     * @param string $toUser    接收用户openID
+     * @param array  $data      模板数据
+     * @param string $link      原文链接
+     * @return array|false
      */
-    public function sendTemplateMessage($temp_id, $toUser, $data, $link = '')
+    public function sendTemplateMessage(string $temp_id, string $toUser, array $data, string $link = '')
     {
         $access_token = $this->getAccessToken();
         $url = $this->api['send_template'] . '?access_token=' . $access_token;
@@ -526,9 +543,10 @@ class WechatService
     /**
      * 生成签名
      *
-     * @return string 签名
+     * @param array $params
+     * @return string
      */
-    protected function makeSign($params)
+    protected function makeSign(array $params): string
     {
         // 签名步骤一：按字典序排序数组参数
         ksort($params);

@@ -7,8 +7,11 @@
 |
 */
 
+use app\http\controller\Index;
 use mon\http\Route;
 use app\http\middleware\WxAuth;
+
+$route->get('/', [Index::class, 'index']);
 
 /** @var \mon\http\Route $route */
 $route->group(['path' => '/consumption', 'namespace' => 'app\http\controller\\'], function (Route $router) {
