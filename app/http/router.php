@@ -7,84 +7,85 @@
 |
 */
 
-use app\http\controller\Index;
 use mon\http\Route;
 use app\http\middleware\WxAuth;
+use app\http\controller\IndexController;
 
-$route->get('/', [Index::class, 'index']);
+// 首页
+$route->get('/', [IndexController::class, 'index']);
 
 /** @var \mon\http\Route $route */
-$route->group(['path' => '/consumption', 'namespace' => 'app\http\controller\\'], function (Route $router) {
+$route->group(['path' => '/consumption', 'namespace' => 'app\http\controller\\'], function (Route $route) {
 
     // 登录
-    $router->group('/user', function (Route $router) {
+    $route->group('/user', function (Route $route) {
         // 登录
-        $router->post('/login/{code}', 'UserController@login');
+        $route->post('/login/{code}', 'UserController@login');
         // 注册
-        $router->post('/register/{code}', 'UserController@register');
+        $route->post('/register/{code}', 'UserController@register');
     });
 
     // 用户相关
-    $router->group(['path' => '/user', 'middleware' => WxAuth::class], function (Route $router) {
+    $route->group(['path' => '/user', 'middleware' => WxAuth::class], function (Route $route) {
         // 刷新token
-        $router->post(['path' => '/refresh'], 'UserController@refreshToken');
+        $route->post(['path' => '/refresh'], 'UserController@refreshToken');
         // 用户信息
-        $router->get(['path' => '/info'], 'UserController@info');
+        $route->get(['path' => '/info'], 'UserController@info');
         // 订阅信息
-        $router->get(['path' => '/subscribe'], 'UserController@getSubscribe');
+        $route->get(['path' => '/subscribe'], 'UserController@getSubscribe');
         // 记录订阅信息
-        $router->post(['path' => '/subscribe/save'], 'UserController@saveSubscribe');
+        $route->post(['path' => '/subscribe/save'], 'UserController@saveSubscribe');
     });
 
     // 账本
-    $router->group(['path' => '/book', 'middleware' => WxAuth::class], function (Route $router) {
+    $route->group(['path' => '/book', 'middleware' => WxAuth::class], function (Route $route) {
         // 查询
-        $router->get('/query/{admin:\d+}', 'BookController@query');
+        $route->get('/query/{admin:\d+}', 'BookController@query');
         // 添加
-        $router->post('/add', 'BookController@add');
+        $route->post('/add', 'BookController@add');
         // 修改
-        $router->post('/modify/{book_id:\d+}', 'BookController@modify');
+        $route->post('/modify/{book_id:\d+}', 'BookController@modify');
         // 删除
-        $router->post('/remove', 'BookController@remove');
+        $route->post('/remove', 'BookController@remove');
         // 获取账本用户
-        $router->get('/get/user/{book_id:\d+}', 'BookController@getBookUser');
+        $route->get('/get/user/{book_id:\d+}', 'BookController@getBookUser');
         // 移除退出账本
-        $router->post('/quit/{book_id:\d+}/{quit_id:\d+}', 'BookController@quit');
+        $route->post('/quit/{book_id:\d+}/{quit_id:\d+}', 'BookController@quit');
         // 获取邀请码
-        $router->get('/apply/{book_id:\d+}', 'BookController@applyCode');
+        $route->get('/apply/{book_id:\d+}', 'BookController@applyCode');
         // 获取邀请信息
-        $router->get('/apply/info/{code}', 'BookController@getApplyInfo');
+        $route->get('/apply/info/{code}', 'BookController@getApplyInfo');
         // 加入账本
-        $router->post('/attend/{code}', 'BookController@attend');
+        $route->post('/attend/{code}', 'BookController@attend');
     });
 
     // 分类
-    $router->group(['path' => '/cate', 'middleware' => WxAuth::class], function (Route $router) {
+    $route->group(['path' => '/cate', 'middleware' => WxAuth::class], function (Route $route) {
         // 获取分类
-        $router->get('/get/{type:\d+}/{custom:\d+}', 'CateController@getCate');
+        $route->get('/get/{type:\d+}/{custom:\d+}', 'CateController@getCate');
         // 添加
-        $router->post('/add', 'CateController@add');
+        $route->post('/add', 'CateController@add');
         // 修改
-        $router->post('/modify/{cate_id:\d+}', 'CateController@modify');
+        $route->post('/modify/{cate_id:\d+}', 'CateController@modify');
         // 删除
-        $router->post('/remove', 'CateController@remove');
+        $route->post('/remove', 'CateController@remove');
     });
 
     // 记录
-    $router->group(['path' => '/record', 'middleware' => WxAuth::class], function (Route $router) {
+    $route->group(['path' => '/record', 'middleware' => WxAuth::class], function (Route $route) {
         // 图片附件上传
-        $router->post('/img/upload', 'RecordController@upload');
+        $route->post('/img/upload', 'RecordController@upload');
         // 获取账本列表
-        $router->get('/list/{pageSize:\d+}/{page:\d+}/{book_id:\d+}/{date}', 'RecordController@list');
+        $route->get('/list/{pageSize:\d+}/{page:\d+}/{book_id:\d+}/{date}', 'RecordController@list');
         // 添加
-        $router->post('/add', 'RecordController@add');
+        $route->post('/add', 'RecordController@add');
         // 编辑
-        $router->post('/modify/{record_id:\d+}', 'RecordController@modify');
+        $route->post('/modify/{record_id:\d+}', 'RecordController@modify');
         // 删除
-        $router->post('/remove', 'RecordController@remove');
+        $route->post('/remove', 'RecordController@remove');
         // 读取记录详情
-        $router->get('/get/{record_id:\d+}', 'RecordController@get');
+        $route->get('/get/{record_id:\d+}', 'RecordController@get');
         // 获取统计分析数据
-        $router->get('/statis/{book_id:\d+}/{type:\d+}/{date}', 'RecordController@statis');
+        $route->get('/statis/{book_id:\d+}/{type:\d+}/{date}', 'RecordController@statis');
     });
 });

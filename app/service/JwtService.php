@@ -83,6 +83,21 @@ class JwtService
     }
 
     /**
+     * 获取配置
+     *
+     * @param string $key   配置名称
+     * @return mixed
+     */
+    public function getConfig(string $key = '')
+    {
+        if (empty($key)) {
+            return $this->config;
+        }
+
+        return $this->config[$key] ?? null;
+    }
+
+    /**
      * 注册配置信息
      *
      * @param array $config
