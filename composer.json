@@ -26,7 +26,8 @@
         "mongdch/mon-orm": "^2.5",
         "mongdch/mon-auth": "^1.0",
         "mongdch/mon-cache": "dev-master",
-        "mongdch/mon-ucenter": "dev-master"
+        "mongdch/mon-ucenter": "dev-master",
+        "mongdch/mon-log": "^1.0"
     },
     "autoload": {
         "psr-4": {

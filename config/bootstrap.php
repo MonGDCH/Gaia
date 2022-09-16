@@ -7,4 +7,8 @@
 |
 */
 
-return [];
+use app\bootstrap\LoggerBootstrap;
+
+return [
+    LoggerBootstrap::class
+];

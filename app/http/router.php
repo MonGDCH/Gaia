@@ -9,12 +9,11 @@
 
 use mon\http\Route;
 use app\http\middleware\WxAuth;
-use app\http\controller\IndexController;
-
-// 首页
-$route->get('/', [IndexController::class, 'index']);
 
 /** @var \mon\http\Route $route */
+$route->get('/', [\app\http\controller\IndexController::class, 'index']);
+
+// API定义
 $route->group(['path' => '/consumption', 'namespace' => 'app\http\controller\\'], function (Route $route) {
 
     // 登录

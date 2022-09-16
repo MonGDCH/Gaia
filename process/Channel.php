@@ -6,7 +6,7 @@ namespace process;
 
 use Channel\Server;
 use Workerman\Worker;
-use gaia\interfaces\Process;
+use gaia\interfaces\ProcessInterface;
 
 /**
  * workermn\channel 进程通信服务
@@ -14,7 +14,7 @@ use gaia\interfaces\Process;
  * @author Mon <985558837@qq.com>
  * @version 1.0.0
  */
-class ChannelServer extends Server implements Process
+class Channel extends Server implements ProcessInterface
 {
     /**
      * 进程配置

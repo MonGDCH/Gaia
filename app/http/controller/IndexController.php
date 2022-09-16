@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace app\http\controller;
 
 use mon\http\Request;
+use mon\log\LoggerFactory;
 use mon\http\support\Controller;
 
 /**
@@ -23,6 +24,8 @@ class IndexController extends Controller
      */
     public function index(Request $request)
     {
+        LoggerFactory::instance()->channel('http')->debug('test', ['trace' => true]);
+
         return 'Hello Controller!';
     }
 }

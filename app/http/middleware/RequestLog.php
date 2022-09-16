@@ -7,8 +7,7 @@ namespace app\http\middleware;
 use Closure;
 use mon\http\Request;
 use mon\http\Response;
-use app\service\LogService;
-use mon\http\interfaces\Middleware;
+use mon\log\LoggerFactory;
 
 /**
  * 请求日志中间件
@@ -16,7 +15,7 @@ use mon\http\interfaces\Middleware;
  * @author Mon <985558837@qq.com>
  * @version 1.0.0
  */
-class RequestLog implements Middleware
+class RequestLog implements \mon\http\interfaces\Middlewareinterface
 {
     /**
      * 中间件实现接口
@@ -37,7 +36,7 @@ class RequestLog implements Middleware
         $local = $request->getLocalIp();
 
         $log = "{$local} {$ip} {$method} {$path}";
-        LogService::instance()->info($log, 'http');
+        LoggerFactory::instance()->channel('http')->info($log);
 
         return $callback($request);
     }

@@ -6,7 +6,7 @@ namespace app\http;
 
 use Throwable;
 use mon\http\Request;
-use app\service\LogService;
+use mon\log\LoggerFactory;
 
 /**
  * 自定义HTTP异常处理
@@ -26,6 +26,6 @@ class ErrorHandler extends \mon\http\support\ErrorHandler
     public function report(Throwable $e, Request $request)
     {
         $log = 'method：' . $request->method() . ' URL：' . $request->path() . ' file: ' . $e->getFile() . ' line: ' . $e->getLine() . ' message: ' . $e->getMessage();
-        LogService::instance()->error($log, 'http');
+        LoggerFactory::instance()->channel('http')->error($log);
     }
 }

@@ -9,7 +9,6 @@ use mon\http\Jump;
 use mon\http\Request;
 use mon\http\Response;
 use app\service\JwtService;
-use mon\http\interfaces\Middleware;
 
 /**
  * 微信JWT登录权限
@@ -17,7 +16,7 @@ use mon\http\interfaces\Middleware;
  * @author Mon <985558837@qq.com>
  * @version 1.0.0
  */
-class WxAuth implements Middleware
+class WxAuth implements \mon\http\interfaces\Middlewareinterface
 {
     /**
      * 中间件实现接口

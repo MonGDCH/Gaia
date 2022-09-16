@@ -88,7 +88,7 @@ class Http extends Process
         $this->registerRoute($app->route());
 
         // 注册数据库
-        $this->registerDatabase();
+        // $this->registerDatabase();
 
         // 绑定响应请求
         $worker->onMessage = [$app, 'onMessage'];

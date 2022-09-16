@@ -7,23 +7,58 @@
 |
 */
 
+use mon\log\format\LineFormat;
+use mon\log\record\FileRecord;
+
 return [
-    'default'  => [
-        'logPath'   => RUNTIME_PATH . '/log',
-        'rollNum'   => 3,
-        'splitLine' => '',
-        'save'      => true
+    // 通道
+    'default' => [
+        // 解析器
+        'format'    => [
+            // 类名
+            'handler'   => LineFormat::class,
+            // 配置信息
+            'config'    => []
+        ],
+        // 记录器
+        'record'    => [
+            // 类名
+            'handler'   => FileRecord::class,
+            // 配置信息
+            'config'    => [
+                // 日志文件大小
+                'maxSize'   => 20480000,
+                // 日志目录
+                'logPath'   => RUNTIME_PATH . '/log',
+                // 日志滚动卷数   
+                'rollNum'   => 3,
+                // 日志名称，空则使用当前日期作为名称       
+                'logName'   => '',
+            ]
+        ]
     ],
-    'http'  => [
-        'logPath'   => RUNTIME_PATH . '/log/http',
-        'rollNum'   => 3,
-        'splitLine' => '',
-        'save'      => true
+    'http' => [
+        // 记录器
+        'record'    => [
+            // 配置信息
+            'config'    => [
+                // 日志目录
+                'logPath'   => RUNTIME_PATH . '/log/http',
+                // 日志滚动卷数   
+                'rollNum'   => 3,
+            ]
+        ]
     ],
-    'error'  => [
-        'logPath'   => RUNTIME_PATH . '/log/error',
-        'rollNum'   => 3,
-        'splitLine' => '',
-        'save'      => true
-    ]
+    'error' => [
+        // 记录器
+        'record'    => [
+            // 配置信息
+            'config'    => [
+                // 日志目录
+                'logPath'   => RUNTIME_PATH . '/log/error',
+                // 日志滚动卷数   
+                'rollNum'   => 3,
+            ]
+        ]
+    ],
 ];
