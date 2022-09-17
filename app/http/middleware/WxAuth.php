@@ -43,8 +43,6 @@ class WxAuth implements \mon\http\interfaces\Middlewareinterface
             return Jump::instance()->abort(401);
         }
 
-        var_dump($info);
-
         // 记录用户ID
         $request->uid = $info['sub'];
 

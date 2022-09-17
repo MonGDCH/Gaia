@@ -8,7 +8,9 @@
 */
 
 use app\bootstrap\LoggerBootstrap;
+use app\bootstrap\UCenterBootstrap;
 
 return [
-    LoggerBootstrap::class
+    LoggerBootstrap::class,
+    UCenterBootstrap::class
 ];

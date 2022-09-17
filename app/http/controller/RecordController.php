@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace app\http\controller;
+
 use mon\util\File;
 use mon\util\Date;
 use mon\http\Request;
@@ -153,7 +155,7 @@ class RecordController extends Controller
      * @param string $date      年月日期
      * @return Response
      */
-    public function statis(Request $request, int $book_id, int $type, string $date): Response
+    public function statis(Request $request, $book_id, $type, string $date): Response
     {
         if (!check('date', $date . '-01')) {
             return $this->error("date params faild");

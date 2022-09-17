@@ -33,7 +33,7 @@ class BookController extends Controller
      * @param integer $admin    1则表示为管理员，其他则所有
      * @return Response
      */
-    public function query(Request $request, int $admin): Response
+    public function query(Request $request, $admin): Response
     {
         $field = ['book_id AS id', 'title', 'admin', 'uid', 'nickname', 'adminUser', 'adminUid'];
         $qeruy = ViwUserBookModel::instance()->where('status', 1)->where('uid', $request->uid)->order('admin', 'DESC')->field($field);

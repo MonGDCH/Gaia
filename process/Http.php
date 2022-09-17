@@ -12,7 +12,7 @@ use Workerman\Timer;
 use Workerman\Worker;
 use mon\util\Container;
 use mon\http\Middleware;
-use app\service\LogService;
+use mon\log\LoggerFactory;
 
 /**
  * HTTP进程服务
@@ -88,7 +88,7 @@ class Http extends Process
         $this->registerRoute($app->route());
 
         // 注册数据库
-        // $this->registerDatabase();
+        $this->registerDatabase();
 
         // 绑定响应请求
         $worker->onMessage = [$app, 'onMessage'];
@@ -125,15 +125,15 @@ class Http extends Process
         Db::listen('connect', function ($dbConnect, $dbConfig) {
             // 连接数据库
             $log = "connect database => mysql:host={$dbConfig['host']};port={$dbConfig['port']};dbname={$dbConfig['database']};charset={$dbConfig['charset']}";
-            LogService::instance()->send('sql', $log, 'http');
+            LoggerFactory::instance()->channel('http')->log('sql', $log);
         });
         Db::listen('query', function ($dbConnect, $dbConfig) {
             // SQL查询
-            LogService::instance()->send('sql', $dbConnect->getLastSql(), 'http');
+            LoggerFactory::instance()->channel('http')->log('sql', $dbConnect->getLastSql());
         });
         Db::listen('execute', function ($dbConnect, $dbConfig) {
             // SQL执行
-            LogService::instance()->send('sql', $dbConnect->getLastSql(), 'http');
+            LoggerFactory::instance()->channel('http')->log('sql', $dbConnect->getLastSql());
         });
         // 打开长链接
         Db::reconnect(true);
