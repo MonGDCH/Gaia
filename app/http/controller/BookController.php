@@ -103,7 +103,7 @@ class BookController extends Controller
         }
 
         // 删除
-        $save = ConsumptionBookModel::instance()->remove($idx, $request->uid);
+        $save = ConsumptionBookModel::instance()->remove((int)$idx, $request->uid);
         if (!$save) {
             return $this->error(ConsumptionBookModel::instance()->getError());
         }

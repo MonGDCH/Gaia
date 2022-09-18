@@ -82,7 +82,7 @@ class CateController extends Controller
         if (!check('int', $cate_id)) {
             return $this->error('params faild');
         }
-        $save = ConsumptionCateModel::instance()->remove($cate_id, $request->uid);
+        $save = ConsumptionCateModel::instance()->remove((int)$cate_id, $request->uid);
         if (!$save) {
             return $this->error(ConsumptionCateModel::instance()->getError());
         }

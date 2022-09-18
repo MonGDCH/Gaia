@@ -81,7 +81,7 @@ class ConsumptionRecordModel extends Model
             // 判断存在附件图片，则保存附件
             if (isset($option['imgs']) && is_array($option['imgs']) && !empty($option['imgs'])) {
                 $record_id = $this->getLastInsID();
-                $saveAnnex = ConsumptionRecordAnnexModel::instance()->add($record_id, $option['imgs']);
+                $saveAnnex = ConsumptionRecordAnnexModel::instance()->add((int)$record_id, $option['imgs']);
                 if (!$saveAnnex) {
                     $this->rollback();
                     $this->error = ConsumptionRecordAnnexModel::instance()->getError();

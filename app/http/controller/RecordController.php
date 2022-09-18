@@ -16,6 +16,7 @@ use app\model\consumption\ViwUserBookModel;
 use app\model\consumption\ConsumptionCateModel;
 use app\model\consumption\ConsumptionRecordModel;
 use app\model\consumption\ConsumptionRecordAnnexModel;
+use mon\log\LoggerFactory;
 
 /**
  * 账单记录控制器
@@ -213,7 +214,7 @@ class RecordController extends Controller
             'orderList' => $orderList,
             'pieData'   => $pieData,
             'lineData'  => $lineData,
-            'total'     => $total
+            'total'     => floatval($total)
         ]);
     }
 
@@ -301,8 +302,11 @@ class RecordController extends Controller
     public function upload(Request $request): Response
     {
         $file = $request->file('file');
+        if (!$file->isValid()) {
+            return $this->error('upload file faild!');
+        }
         // 验证文件类型
-        if (!in_array($file->getExtension(), ['jpg', 'jpeg', 'png', 'gif'])) {
+        if (!in_array($file->getUploadExtension(), ['jpg', 'jpeg', 'png', 'gif'])) {
             return $this->error('upload file type faild!');
         }
         // 验证文件大小
@@ -319,13 +323,13 @@ class RecordController extends Controller
         }
 
         try {
-            $fileName = uniqid(mt_rand(0, 999999) . 'abc') . '.' . $file->getExtension();
+            $fileName = uniqid(mt_rand(0, 999999) . 'abc') . '.' . $file->getUploadExtension();
             $saveName = $saveDir . $fileName;
             $moveFile = $file->move($saveName);
             $path = '/upload/' . $date . '/' . $fileName;
-            return $this->success('ok', ['url' => $path, 'cdn' => 'http://cdn.gdmon.com/']);
+            return $this->success('ok', ['url' => $path, 'cdn' => 'http://localhost:8080']);
         } catch (FileException $e) {
-            LogService::instance()->error('upload exception => ' . $e->getMessage(), 'http', true);
+            LoggerFactory::instance()->channel('http')->error('upload exception => ' . $e->getMessage(), ['trace' => true]);
             return $this->error('保存上传文件异常');
         }
     }
