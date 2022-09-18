@@ -70,7 +70,7 @@ class Http extends Process
         $app->init($worker, $errorHandler, $debug);
 
         // 应用扩展支持
-        $app->suppertCallback($appConfig['reusecall'], $appConfig['request'], $appConfig['max_cache']);
+        $app->suppertCallback($appConfig['reusecall'], $appConfig['request'], $appConfig['usescalar'], $appConfig['max_cache']);
 
         // 静态文件支持
         $staticConfig = $httpConfig['static'];

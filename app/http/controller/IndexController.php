@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace app\http\controller;
 
+use Exception;
 use mon\http\Request;
 use mon\log\LoggerFactory;
 use mon\http\support\Controller;

@@ -9,9 +9,10 @@
 
 use mon\http\Route;
 use app\http\middleware\WxAuth;
+use app\http\middleware\Test;
 
 /** @var \mon\http\Route $route */
-$route->get('/', [\app\http\controller\IndexController::class, 'index']);
+// $route->get(['path' => '/', 'middleware' => Test::class], [\app\http\controller\IndexController::class, 'index']);
 
 // API定义
 $route->group(['path' => '/consumption', 'namespace' => 'app\http\controller\\'], function (Route $route) {

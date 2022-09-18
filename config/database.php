@@ -12,7 +12,7 @@ return [
         // 数据库类型，只支持mysql
         'type'          => 'mysql',
         // 服务器地址
-        'host'          => '127.0.0.1',
+        'host'          => 'host.docker.internal',
         // 数据库名
         'database'      => 'gshop',
         // 用户名

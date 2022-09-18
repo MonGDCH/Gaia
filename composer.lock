@@ -304,20 +304,20 @@
         },
         {
             "name": "mongdch/mon-log",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/mon-log.git",
-                "reference": "f243b60e50ce0a1c13ffc1d12becbfb1496ae9b2"
+                "reference": "6921ff0793ba62af7b4ef1c1d6f8a757de706d27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/mon-log/zipball/f243b60e50ce0a1c13ffc1d12becbfb1496ae9b2",
-                "reference": "f243b60e50ce0a1c13ffc1d12becbfb1496ae9b2",
+                "url": "https://api.github.com/repos/MonGDCH/mon-log/zipball/6921ff0793ba62af7b4ef1c1d6f8a757de706d27",
+                "reference": "6921ff0793ba62af7b4ef1c1d6f8a757de706d27",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.4.0",
+                "php": ">=7.0.0",
                 "psr/log": "^1.1"
             },
             "type": "library",
@@ -347,9 +347,9 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/mon-log/issues",
-                "source": "https://github.com/MonGDCH/mon-log/tree/1.0.0"
+                "source": "https://github.com/MonGDCH/mon-log/tree/1.0.1"
             },
-            "time": "2022-09-16T06:04:16+00:00"
+            "time": "2022-09-17T13:53:03+00:00"
         },
         {
             "name": "mongdch/mon-orm",
