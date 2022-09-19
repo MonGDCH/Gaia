@@ -12,19 +12,20 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/gaia-framework.git",
-                "reference": "f5c2bee577d180d5c1ef0faf8da686f0c64eca11"
+                "reference": "47f383d4d4888419d00971177887c9fcb8ec8c17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/f5c2bee577d180d5c1ef0faf8da686f0c64eca11",
-                "reference": "f5c2bee577d180d5c1ef0faf8da686f0c64eca11",
+                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/47f383d4d4888419d00971177887c9fcb8ec8c17",
+                "reference": "47f383d4d4888419d00971177887c9fcb8ec8c17",
                 "shasum": ""
             },
             "require": {
                 "mongdch/mon-console": "^1.1",
                 "mongdch/mon-env": "^1.1",
-                "mongdch/mon-util": "dev-master",
-                "php": ">=7.0.0",
+                "mongdch/mon-log": "^1.0",
+                "mongdch/mon-util": "^1.3",
+                "php": ">=7.2.0",
                 "workerman/workerman": "^4.1"
             },
             "default-branch": true,
@@ -58,7 +59,7 @@
                 "issues": "https://github.com/MonGDCH/gaia-framework/issues",
                 "source": "https://github.com/MonGDCH/gaia-framework/tree/master"
             },
-            "time": "2022-09-01T03:30:00+00:00"
+            "time": "2022-09-19T06:16:02+00:00"
         },
         {
             "name": "mongdch/mon-console",
@@ -150,25 +151,72 @@
             "time": "2022-08-17T09:01:36+00:00"
         },
         {
-            "name": "mongdch/mon-util",
-            "version": "dev-master",
+            "name": "mongdch/mon-log",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/MonGDCH/mon-util.git",
-                "reference": "8e087adc011ab4fb9291ff2d076bd90afe4930ae"
+                "url": "https://github.com/MonGDCH/mon-log.git",
+                "reference": "3ab063d51459c5f3330b33607ddf0f7e6a68fa87"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/mon-util/zipball/8e087adc011ab4fb9291ff2d076bd90afe4930ae",
-                "reference": "8e087adc011ab4fb9291ff2d076bd90afe4930ae",
+                "url": "https://api.github.com/repos/MonGDCH/mon-log/zipball/3ab063d51459c5f3330b33607ddf0f7e6a68fa87",
+                "reference": "3ab063d51459c5f3330b33607ddf0f7e6a68fa87",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0",
+                "psr/log": "^1.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "mon\\log\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mon",
+                    "email": "985558837@qq.com",
+                    "homepage": "http://www.gdmon.com/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "The Logger Utils for PSR-3.",
+            "homepage": "http://gdmon.com/",
+            "keywords": [
+                "log",
+                "logger",
+                "psr-3"
+            ],
+            "support": {
+                "issues": "https://github.com/MonGDCH/mon-log/issues",
+                "source": "https://github.com/MonGDCH/mon-log/tree/1.0.2"
+            },
+            "time": "2022-09-19T05:51:48+00:00"
+        },
+        {
+            "name": "mongdch/mon-util",
+            "version": "1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MonGDCH/mon-util.git",
+                "reference": "6acc382ece05f05f64363f283fa2aeac1ef9e8e2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MonGDCH/mon-util/zipball/6acc382ece05f05f64363f283fa2aeac1ef9e8e2",
+                "reference": "6acc382ece05f05f64363f283fa2aeac1ef9e8e2",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.6.0",
-                "psr/container": "1.0.0",
-                "psr/log": "^1.1"
+                "psr/container": "1.0.0"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "files": [
@@ -188,7 +236,7 @@
                     "email": "985558837@qq.com"
                 }
             ],
-            "description": "常用的PHP工具类库，包含了各种各式各样的工具，如：容器、时间、验证器、多语言、图片、二维码、IP地址、文件上传、文件操作、加解密、数据字典、各种算法等等等等。。。",
+            "description": "常用的PHP工具类库，包含了各种各式各样的工具，如：容器、时间、验证器、多语言、图片处理、二维码生成、IP地址解析、文文件操作、数据安全、数据字典等等等等。。。",
             "homepage": "http://www.gdmon.com",
             "keywords": [
                 "mon",
@@ -197,9 +245,9 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/mon-util/issues",
-                "source": "https://github.com/MonGDCH/mon-util/tree/master"
+                "source": "https://github.com/MonGDCH/mon-util/tree/1.4.0"
             },
-            "time": "2022-09-01T02:49:04+00:00"
+            "time": "2022-09-16T10:02:02+00:00"
         },
         {
             "name": "psr/container",
@@ -310,12 +358,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/walkor/workerman.git",
-                "reference": "88ddf517e5c35bee072b2e453c4fcca0c6f1e59a"
+                "reference": "e535daf8c5778dd05ab75bcc0ba9e1959b1a4ce5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/walkor/workerman/zipball/88ddf517e5c35bee072b2e453c4fcca0c6f1e59a",
-                "reference": "88ddf517e5c35bee072b2e453c4fcca0c6f1e59a",
+                "url": "https://api.github.com/repos/walkor/workerman/zipball/e535daf8c5778dd05ab75bcc0ba9e1959b1a4ce5",
+                "reference": "e535daf8c5778dd05ab75bcc0ba9e1959b1a4ce5",
                 "shasum": ""
             },
             "require": {
@@ -365,7 +413,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2022-08-20T10:16:22+00:00"
+            "time": "2022-09-19T04:08:49+00:00"
         }
     ],
     "packages-dev": [],
