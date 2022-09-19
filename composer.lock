@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "71cb3dc9b09c2e138ee585fe0bc7495b",
+    "content-hash": "32ccb35634d093ebd2f8184a17c2ddba",
     "packages": [
         {
             "name": "mongdch/gaia-framework",
-            "version": "dev-master",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/gaia-framework.git",
-                "reference": "47f383d4d4888419d00971177887c9fcb8ec8c17"
+                "reference": "ddfb9734ee86e27693cfec3a8880d5f0df229e1c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/47f383d4d4888419d00971177887c9fcb8ec8c17",
-                "reference": "47f383d4d4888419d00971177887c9fcb8ec8c17",
+                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/ddfb9734ee86e27693cfec3a8880d5f0df229e1c",
+                "reference": "ddfb9734ee86e27693cfec3a8880d5f0df229e1c",
                 "shasum": ""
             },
             "require": {
@@ -28,7 +28,6 @@
                 "php": ">=7.2.0",
                 "workerman/workerman": "^4.1"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -57,9 +56,9 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/gaia-framework/issues",
-                "source": "https://github.com/MonGDCH/gaia-framework/tree/master"
+                "source": "https://github.com/MonGDCH/gaia-framework/tree/1.0.1"
             },
-            "time": "2022-09-19T06:16:02+00:00"
+            "time": "2022-09-19T10:07:23+00:00"
         },
         {
             "name": "mongdch/mon-console",
@@ -354,16 +353,16 @@
         },
         {
             "name": "workerman/workerman",
-            "version": "4.1.x-dev",
+            "version": "v4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/walkor/workerman.git",
-                "reference": "e535daf8c5778dd05ab75bcc0ba9e1959b1a4ce5"
+                "reference": "88ddf517e5c35bee072b2e453c4fcca0c6f1e59a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/walkor/workerman/zipball/e535daf8c5778dd05ab75bcc0ba9e1959b1a4ce5",
-                "reference": "e535daf8c5778dd05ab75bcc0ba9e1959b1a4ce5",
+                "url": "https://api.github.com/repos/walkor/workerman/zipball/88ddf517e5c35bee072b2e453c4fcca0c6f1e59a",
+                "reference": "88ddf517e5c35bee072b2e453c4fcca0c6f1e59a",
                 "shasum": ""
             },
             "require": {
@@ -413,19 +412,17 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2022-09-19T04:08:49+00:00"
+            "time": "2022-08-20T10:16:22+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "dev",
-    "stability-flags": {
-        "mongdch/gaia-framework": 20
-    },
+    "minimum-stability": "stable",
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.0.0"
+        "php": ">=7.2.0"
     },
     "platform-dev": [],
     "plugin-api-version": "2.2.0"
