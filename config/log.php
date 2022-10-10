@@ -9,6 +9,7 @@
 
 use mon\log\format\LineFormat;
 use mon\log\record\FileRecord;
+use mon\log\record\FileBatchRecord;
 
 return [
     // 通道
@@ -34,6 +35,32 @@ return [
                 'rollNum'   => 3,
                 // 日志名称，空则使用当前日期作为名称       
                 'logName'   => '',
+            ]
+        ]
+    ],
+    // http日志通道
+    'http' => [
+        // 记录器
+        'record'    => [
+            // 类名
+            'handler'   => FileBatchRecord::class,
+            // 配置信息
+            'config'    => [
+                // 日志目录
+                'logPath'   => RUNTIME_PATH . '/log/http',
+            ]
+        ]
+    ],
+    // fpm日志通道
+    'fpm' => [
+        // 记录器
+        'record'    => [
+            // 类名
+            'handler'   => FileBatchRecord::class,
+            // 配置信息
+            'config'    => [
+                // 日志目录
+                'logPath'   => RUNTIME_PATH . '/log/fpm',
             ]
         ]
     ],
