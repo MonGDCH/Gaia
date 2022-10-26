@@ -151,16 +151,16 @@
         },
         {
             "name": "mongdch/mon-log",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/mon-log.git",
-                "reference": "45686950c4b88e3fa97190cc4e48d7516245fdc0"
+                "reference": "c43f5ba1b5dc2a330001a548fb485527e51dc399"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/mon-log/zipball/45686950c4b88e3fa97190cc4e48d7516245fdc0",
-                "reference": "45686950c4b88e3fa97190cc4e48d7516245fdc0",
+                "url": "https://api.github.com/repos/MonGDCH/mon-log/zipball/c43f5ba1b5dc2a330001a548fb485527e51dc399",
+                "reference": "c43f5ba1b5dc2a330001a548fb485527e51dc399",
                 "shasum": ""
             },
             "require": {
@@ -194,22 +194,22 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/mon-log/issues",
-                "source": "https://github.com/MonGDCH/mon-log/tree/1.0.3"
+                "source": "https://github.com/MonGDCH/mon-log/tree/1.0.4"
             },
-            "time": "2022-10-10T03:02:04+00:00"
+            "time": "2022-10-17T02:19:44+00:00"
         },
         {
             "name": "mongdch/mon-util",
-            "version": "1.4.2",
+            "version": "1.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/mon-util.git",
-                "reference": "05c1aaaef786ba496a1a9230b75a6463bc848fac"
+                "reference": "d3970a21f9d8a8311e1261fff211c58eb59368e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/mon-util/zipball/05c1aaaef786ba496a1a9230b75a6463bc848fac",
-                "reference": "05c1aaaef786ba496a1a9230b75a6463bc848fac",
+                "url": "https://api.github.com/repos/MonGDCH/mon-util/zipball/d3970a21f9d8a8311e1261fff211c58eb59368e1",
+                "reference": "d3970a21f9d8a8311e1261fff211c58eb59368e1",
                 "shasum": ""
             },
             "require": {
@@ -231,12 +231,14 @@
             ],
             "authors": [
                 {
-                    "name": "MonGDCH",
-                    "email": "985558837@qq.com"
+                    "name": "Mon",
+                    "email": "985558837@qq.com",
+                    "homepage": "http://www.gdmon.com/",
+                    "role": "Developer"
                 }
             ],
             "description": "常用的PHP工具类库，包含了各种各式各样的工具，如：容器、时间、验证器、多语言、图片处理、二维码生成、IP地址解析、文文件操作、数据安全、数据字典等等等等。。。",
-            "homepage": "http://www.gdmon.com",
+            "homepage": "http://gdmon.com/",
             "keywords": [
                 "mon",
                 "tool",
@@ -244,9 +246,9 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/mon-util/issues",
-                "source": "https://github.com/MonGDCH/mon-util/tree/1.4.2"
+                "source": "https://github.com/MonGDCH/mon-util/tree/1.4.3"
             },
-            "time": "2022-09-28T09:00:47+00:00"
+            "time": "2022-10-25T10:17:23+00:00"
         },
         {
             "name": "psr/container",

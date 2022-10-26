@@ -29,7 +29,8 @@
             "process\\": "process/"
         },
         "files": [
-            "./support/bootstrap.php"
+            "./support/bootstrap.php",
+            "./support/helpers.php"
         ]
     },
     "minimum-stability": "stable",
