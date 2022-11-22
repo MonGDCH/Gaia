@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "mongdch/gaia-framework",
-            "version": "1.0.3",
+            "version": "1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/gaia-framework.git",
-                "reference": "c932156183c48efbf9cf79208a22c863ee388b15"
+                "reference": "293556a46245ccb7ef565e715778cd97244f4d0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/c932156183c48efbf9cf79208a22c863ee388b15",
-                "reference": "c932156183c48efbf9cf79208a22c863ee388b15",
+                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/293556a46245ccb7ef565e715778cd97244f4d0c",
+                "reference": "293556a46245ccb7ef565e715778cd97244f4d0c",
                 "shasum": ""
             },
             "require": {
@@ -56,26 +56,26 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/gaia-framework/issues",
-                "source": "https://github.com/MonGDCH/gaia-framework/tree/1.0.3"
+                "source": "https://github.com/MonGDCH/gaia-framework/tree/1.0.6"
             },
-            "time": "2022-09-27T05:59:31+00:00"
+            "time": "2022-11-22T03:08:37+00:00"
         },
         {
             "name": "mongdch/mon-console",
-            "version": "1.1.1",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/mon-console.git",
-                "reference": "9ac01b997c25d0b019fe895c112184056f494304"
+                "reference": "8a7b445b4a3e28f3c0e1836b809b44ba64df6370"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/mon-console/zipball/9ac01b997c25d0b019fe895c112184056f494304",
-                "reference": "9ac01b997c25d0b019fe895c112184056f494304",
+                "url": "https://api.github.com/repos/MonGDCH/mon-console/zipball/8a7b445b4a3e28f3c0e1836b809b44ba64df6370",
+                "reference": "8a7b445b4a3e28f3c0e1836b809b44ba64df6370",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.0"
+                "php": ">=7.2"
             },
             "type": "library",
             "autoload": {
@@ -101,9 +101,9 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/mon-console/issues",
-                "source": "https://github.com/MonGDCH/mon-console/tree/1.1.1"
+                "source": "https://github.com/MonGDCH/mon-console/tree/1.1.2"
             },
-            "time": "2022-08-31T07:15:25+00:00"
+            "time": "2022-11-15T09:58:44+00:00"
         },
         {
             "name": "mongdch/mon-env",

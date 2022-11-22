@@ -24,9 +24,7 @@
     },
     "autoload": {
         "psr-4": {
-            "app\\": "app/",
-            "support\\": "support/",
-            "process\\": "process/"
+            "": "./"
         },
         "files": [
             "./support/bootstrap.php",

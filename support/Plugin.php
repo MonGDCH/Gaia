@@ -3,11 +3,13 @@
 namespace support;
 
 use mon\util\File;
+use mon\env\Config;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
+use gaia\interfaces\PluginInterface;
 
 /**
- * 插件安装驱动，兼容webman插件
+ * 插件安装驱动
  * 
  * @see 修改自webman/plugin
  * @author Mon <985558837@qq.com>
@@ -66,6 +68,59 @@ class Plugin
     }
 
     /**
+     * 获取请求根路径
+     *
+     * @return string
+     */
+    public static function getRootPath(): string
+    {
+        return defined('ROOT_PATH') ? ROOT_PATH : dirname(__DIR__);
+    }
+
+    /**
+     * 注册启用插件
+     *
+     * @param string $path  插件路径，默认常量 PLUGIN_PATH
+     * @return void
+     */
+    public static function register(string $path = '')
+    {
+        // 插件路径
+        $path = $path ?: PLUGIN_PATH;
+        if (!is_dir($path)) {
+            return;
+        }
+        // 加载插件
+        $plugins = glob($path . '/**/Bootstrap.php');
+        foreach ($plugins as $plugin) {
+            // 插件路径
+            $plugin_path = dirname($plugin);
+            // 插件名
+            $plugin_name = basename($plugin_path);
+            $className = '\\plugins\\' . $plugin_name . '\\Bootstrap';
+            if (!class_exists($className) || !is_subclass_of($className, PluginInterface::class)) {
+                // 跳过非插件目录
+                continue;
+            }
+            // 插件是否启用
+            if (!$className::enable()) {
+                // 跳过未启用插件
+                continue;
+            }
+
+            // 配置路径
+            $config_path = $plugin_path . DIRECTORY_SEPARATOR . 'config';
+            // 加载配置
+            $config = [];
+            if (is_dir($config_path)) {
+                $config = Config::instance()->loadDir($config_path, true, [], 'plugins.' . $plugin_name);
+            }
+            // 初始化
+            $className::init($config);
+        }
+    }
+
+    /**
      * 复制文件夹
      *
      * @param string $source 源文件夹
@@ -75,7 +130,7 @@ class Plugin
      */
     public static function copydir($source, $dest, $overwrite = false)
     {
-        $dest = ROOT_PATH . DIRECTORY_SEPARATOR . $dest;
+        $dest = static::getRootPath() . DIRECTORY_SEPARATOR . $dest;
         File::instance()->createDir($dest);
         echo "Create Dir $dest\r\n";
         $dir_iterator = new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS);
@@ -108,7 +163,7 @@ class Plugin
      */
     public static function copyFile($source, $dest, $overwrite = false)
     {
-        $dest = ROOT_PATH . DIRECTORY_SEPARATOR . $dest;
+        $dest = static::getRootPath() . DIRECTORY_SEPARATOR . $dest;
         File::instance()->copyFile($source, $dest, $overwrite);
         echo "Create File $dest\r\n";
     }
@@ -121,10 +176,8 @@ class Plugin
      */
     protected static function checkPlugin($namespace)
     {
-        $webman = "\\{$namespace}Install::WEBMAN_PLUGIN";
-        $gaia =  "\\{$namespace}Install::GAIA_PLUGIN";
-
-        return defined($webman) || defined($gaia);
+        $gaia = "\\{$namespace}Install::GAIA_PLUGIN";
+        return defined($gaia);
     }
 
     /**
