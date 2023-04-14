@@ -25,15 +25,7 @@ class Plugin
      */
     public static function install($event)
     {
-        static::init();
-        $namespace = static::getNamespace($event);
-        if (is_null($namespace)) {
-            return;
-        }
-        $install_function = "\\{$namespace}Install::install";
-        if (static::checkPlugin($namespace) && is_callable($install_function)) {
-            $install_function();
-        }
+        static::callPlugin($event, 'install');
     }
 
     /**
@@ -44,7 +36,7 @@ class Plugin
      */
     public static function update($event)
     {
-        static::install($event);
+        static::callPlugin($event, 'update');
     }
 
     /**
@@ -55,16 +47,7 @@ class Plugin
      */
     public static function uninstall($event)
     {
-        static::init();
-        $namespace = static::getNamespace($event);
-        if (is_null($namespace)) {
-            return;
-        }
-
-        $uninstall_function = "\\{$namespace}Install::uninstall";
-        if (static::checkPlugin($namespace) && is_callable($uninstall_function)) {
-            $uninstall_function();
-        }
+        static::callPlugin($event, 'uninstall');
     }
 
     /**
@@ -166,6 +149,26 @@ class Plugin
         $dest = static::getRootPath() . DIRECTORY_SEPARATOR . $dest;
         File::instance()->copyFile($source, $dest, $overwrite);
         echo "Create File $dest\r\n";
+    }
+
+    /**
+     * 执行插件方法
+     *
+     * @param mixed $event  composer事件实例
+     * @param string $call  插件方法名
+     * @return void
+     */
+    protected static function callPlugin($event, string $call)
+    {
+        static::init();
+        $namespace = static::getNamespace($event);
+        if (is_null($namespace)) {
+            return;
+        }
+        $call_function = "\\{$namespace}Install::{$call}";
+        if (static::checkPlugin($namespace) && is_callable($call_function)) {
+            $call_function();
+        }
     }
 
     /**
