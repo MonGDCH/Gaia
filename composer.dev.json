@@ -42,5 +42,11 @@
         "pre-package-uninstall": [
             "support\\Plugin::uninstall"
         ]
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.org/"
+        }
     }
 }

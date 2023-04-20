@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "mongdch/gaia-framework",
-            "version": "1.0.7",
+            "version": "1.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/gaia-framework.git",
-                "reference": "4b5f6198aa75cd8b3a29227320d48064364d6ea4"
+                "reference": "0a7f523c2c6dde75d6a5c5e8530dcb20ca7f3fb9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/4b5f6198aa75cd8b3a29227320d48064364d6ea4",
-                "reference": "4b5f6198aa75cd8b3a29227320d48064364d6ea4",
+                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/0a7f523c2c6dde75d6a5c5e8530dcb20ca7f3fb9",
+                "reference": "0a7f523c2c6dde75d6a5c5e8530dcb20ca7f3fb9",
                 "shasum": ""
             },
             "require": {
@@ -56,9 +56,9 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/gaia-framework/issues",
-                "source": "https://github.com/MonGDCH/gaia-framework/tree/1.0.7"
+                "source": "https://github.com/MonGDCH/gaia-framework/tree/1.0.9"
             },
-            "time": "2023-04-14T06:17:55+00:00"
+            "time": "2023-04-15T09:41:38+00:00"
         },
         {
             "name": "mongdch/mon-console",
