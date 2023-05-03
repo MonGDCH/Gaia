@@ -4,20 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "32ccb35634d093ebd2f8184a17c2ddba",
+    "content-hash": "63ad337baac55005b7fc3a3a19faf989",
     "packages": [
         {
             "name": "mongdch/gaia-framework",
-            "version": "1.0.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/MonGDCH/gaia-framework.git",
-                "reference": "0a7f523c2c6dde75d6a5c5e8530dcb20ca7f3fb9"
-            },
+            "version": "1.1.0",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/0a7f523c2c6dde75d6a5c5e8530dcb20ca7f3fb9",
-                "reference": "0a7f523c2c6dde75d6a5c5e8530dcb20ca7f3fb9",
+                "url": "https://mirrors.cloud.tencent.com/repository/composer/mongdch/gaia-framework/1.1.0/mongdch-gaia-framework-1.1.0.zip",
+                "reference": "d71bbcf5f62e326738a86bfb9f1e7ab23db53dd0",
                 "shasum": ""
             },
             "require": {
@@ -34,7 +29,6 @@
                     "gaia\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -54,23 +48,14 @@
                 "multi process",
                 "workerman"
             ],
-            "support": {
-                "issues": "https://github.com/MonGDCH/gaia-framework/issues",
-                "source": "https://github.com/MonGDCH/gaia-framework/tree/1.0.9"
-            },
-            "time": "2023-04-15T09:41:38+00:00"
+            "time": "2023-05-03T02:06:38+00:00"
         },
         {
             "name": "mongdch/mon-console",
             "version": "1.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/MonGDCH/mon-console.git",
-                "reference": "8a7b445b4a3e28f3c0e1836b809b44ba64df6370"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/mon-console/zipball/8a7b445b4a3e28f3c0e1836b809b44ba64df6370",
+                "url": "https://mirrors.cloud.tencent.com/repository/composer/mongdch/mon-console/1.1.2/mongdch-mon-console-1.1.2.zip",
                 "reference": "8a7b445b4a3e28f3c0e1836b809b44ba64df6370",
                 "shasum": ""
             },
@@ -83,7 +68,6 @@
                     "mon\\console\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -99,24 +83,15 @@
                 "console",
                 "mon"
             ],
-            "support": {
-                "issues": "https://github.com/MonGDCH/mon-console/issues",
-                "source": "https://github.com/MonGDCH/mon-console/tree/1.1.2"
-            },
             "time": "2022-11-15T09:58:44+00:00"
         },
         {
             "name": "mongdch/mon-env",
-            "version": "1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/MonGDCH/mon-env.git",
-                "reference": "5291e80c7c1832683ce81a1d02a3c3e91a3a4366"
-            },
+            "version": "1.1.1",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/mon-env/zipball/5291e80c7c1832683ce81a1d02a3c3e91a3a4366",
-                "reference": "5291e80c7c1832683ce81a1d02a3c3e91a3a4366",
+                "url": "https://mirrors.cloud.tencent.com/repository/composer/mongdch/mon-env/1.1.1/mongdch-mon-env-1.1.1.zip",
+                "reference": "0b27e903029a3a867e3b0886b0547072d156f5bb",
                 "shasum": ""
             },
             "require": {
@@ -128,7 +103,6 @@
                     "mon\\env\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -143,23 +117,14 @@
                 "config",
                 "env"
             ],
-            "support": {
-                "issues": "https://github.com/MonGDCH/mon-env/issues",
-                "source": "https://github.com/MonGDCH/mon-env/tree/1.1.0"
-            },
-            "time": "2022-08-17T09:01:36+00:00"
+            "time": "2023-04-27T14:02:38+00:00"
         },
         {
             "name": "mongdch/mon-log",
             "version": "1.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/MonGDCH/mon-log.git",
-                "reference": "c43f5ba1b5dc2a330001a548fb485527e51dc399"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/mon-log/zipball/c43f5ba1b5dc2a330001a548fb485527e51dc399",
+                "url": "https://mirrors.cloud.tencent.com/repository/composer/mongdch/mon-log/1.0.4/mongdch-mon-log-1.0.4.zip",
                 "reference": "c43f5ba1b5dc2a330001a548fb485527e51dc399",
                 "shasum": ""
             },
@@ -173,7 +138,6 @@
                     "mon\\log\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -192,24 +156,15 @@
                 "logger",
                 "psr-3"
             ],
-            "support": {
-                "issues": "https://github.com/MonGDCH/mon-log/issues",
-                "source": "https://github.com/MonGDCH/mon-log/tree/1.0.4"
-            },
             "time": "2022-10-17T02:19:44+00:00"
         },
         {
             "name": "mongdch/mon-util",
-            "version": "1.4.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/MonGDCH/mon-util.git",
-                "reference": "d3970a21f9d8a8311e1261fff211c58eb59368e1"
-            },
+            "version": "1.4.5",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/mon-util/zipball/d3970a21f9d8a8311e1261fff211c58eb59368e1",
-                "reference": "d3970a21f9d8a8311e1261fff211c58eb59368e1",
+                "url": "https://mirrors.cloud.tencent.com/repository/composer/mongdch/mon-util/1.4.5/mongdch-mon-util-1.4.5.zip",
+                "reference": "392d868d862d04d2d696183883da2bf283701837",
                 "shasum": ""
             },
             "require": {
@@ -219,13 +174,12 @@
             "type": "library",
             "autoload": {
                 "files": [
-                    "src/functions.php"
+                    "src/helpers.php"
                 ],
                 "psr-4": {
                     "mon\\util\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache-2.0"
             ],
@@ -237,30 +191,21 @@
                     "role": "Developer"
                 }
             ],
-            "description": "常用的PHP工具类库，包含了各种各式各样的工具，如：容器、时间、验证器、多语言、图片处理、二维码生成、IP地址解析、文文件操作、数据安全、数据字典等等等等。。。",
+            "description": "常用的PHP工具类库，包含了各种各式各样的工具，如：容器、时间、验证器、多语言、图片处理、二维码生成、IP地址解析、文件操作、数据安全、数据字典等等等等。。。",
             "homepage": "http://gdmon.com/",
             "keywords": [
                 "mon",
                 "tool",
                 "util"
             ],
-            "support": {
-                "issues": "https://github.com/MonGDCH/mon-util/issues",
-                "source": "https://github.com/MonGDCH/mon-util/tree/1.4.3"
-            },
-            "time": "2022-10-25T10:17:23+00:00"
+            "time": "2023-04-25T02:13:57+00:00"
         },
         {
             "name": "psr/container",
             "version": "1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/container.git",
-                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/container/zipball/b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
+                "url": "https://mirrors.cloud.tencent.com/repository/composer/psr/container/1.0.0/psr-container-1.0.0.zip",
                 "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
                 "shasum": ""
             },
@@ -278,7 +223,6 @@
                     "Psr\\Container\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -297,23 +241,14 @@
                 "container-interop",
                 "psr"
             ],
-            "support": {
-                "issues": "https://github.com/php-fig/container/issues",
-                "source": "https://github.com/php-fig/container/tree/master"
-            },
             "time": "2017-02-14T16:28:37+00:00"
         },
         {
             "name": "psr/log",
             "version": "1.1.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/log.git",
-                "reference": "d49695b909c3b7628b6289db5479a1c204601f11"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/d49695b909c3b7628b6289db5479a1c204601f11",
+                "url": "https://mirrors.cloud.tencent.com/repository/composer/psr/log/1.1.4/psr-log-1.1.4.zip",
                 "reference": "d49695b909c3b7628b6289db5479a1c204601f11",
                 "shasum": ""
             },
@@ -331,7 +266,6 @@
                     "Psr\\Log\\": "Psr/Log/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -348,23 +282,15 @@
                 "psr",
                 "psr-3"
             ],
-            "support": {
-                "source": "https://github.com/php-fig/log/tree/1.1.4"
-            },
             "time": "2021-05-03T11:20:27+00:00"
         },
         {
             "name": "workerman/workerman",
-            "version": "v4.1.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/walkor/workerman.git",
-                "reference": "1f92d02c26106b5fbe6f61ea776198aad6e426f7"
-            },
+            "version": "v4.1.10",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/walkor/workerman/zipball/1f92d02c26106b5fbe6f61ea776198aad6e426f7",
-                "reference": "1f92d02c26106b5fbe6f61ea776198aad6e426f7",
+                "url": "https://mirrors.cloud.tencent.com/repository/composer/workerman/workerman/v4.1.10/workerman-workerman-v4.1.10.zip",
+                "reference": "e967b79f95b9251a72acb971be05623ec1a51e83",
                 "shasum": ""
             },
             "require": {
@@ -379,7 +305,6 @@
                     "Workerman\\": "./"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -397,24 +322,7 @@
                 "asynchronous",
                 "event-loop"
             ],
-            "support": {
-                "email": "walkor@workerman.net",
-                "forum": "http://wenda.workerman.net/",
-                "issues": "https://github.com/walkor/workerman/issues",
-                "source": "https://github.com/walkor/workerman",
-                "wiki": "http://doc.workerman.net/"
-            },
-            "funding": [
-                {
-                    "url": "https://opencollective.com/workerman",
-                    "type": "open_collective"
-                },
-                {
-                    "url": "https://www.patreon.com/walkor",
-                    "type": "patreon"
-                }
-            ],
-            "time": "2023-03-10T13:59:12+00:00"
+            "time": "2023-05-01T02:12:20+00:00"
         }
     ],
     "packages-dev": [],
