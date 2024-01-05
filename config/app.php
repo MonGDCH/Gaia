@@ -9,7 +9,7 @@
 
 return [
     // 是否调试模式
-    'debug'     => true,
+    'debug'     => env('APP_DEBUG', false),
     // 时区
     'timezone'  => 'PRC',
     // worker进程配置
@@ -18,6 +18,8 @@ return [
         'max_package_size'  => 10 * 1024 * 1024,
         // 存储主进程PID的文件
         'pid_file'          => RUNTIME_PATH . '/gaia.pid',
+        // 存储关闭服务标准输出的文件
+        'stdout_file'       => RUNTIME_PATH . '/stdout.log',
         // workerman日志记录文件
         'log_file'          => RUNTIME_PATH . '/workerman.log',
         // 存储主进程状态信息的文件，运行 status 指令后，内容会写入该文件
@@ -33,5 +35,7 @@ return [
         'paths' => [APP_PATH, CONFIG_PATH],
         // 监控指定后缀名文件
         'exts'  => ['php', 'html'],
+        // 暂停监控服务锁文件未知
+        'lock'  => RUNTIME_PATH . '/monitor.lock',
     ]
 ];

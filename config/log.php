@@ -46,7 +46,7 @@ return [
                 // 日志文件大小
                 'maxSize'   => 20480000,
                 // 日志目录
-                'logPath'   => RUNTIME_PATH . '/log',
+                'logPath'   => RUNTIME_PATH . DIRECTORY_SEPARATOR . 'log',
                 // 日志滚动卷数   
                 'rollNum'   => 3
             ]
