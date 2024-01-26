@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2bdf749d83f612ccc5e85aaeb98aca02",
+    "content-hash": "f8791aa7f0bb32652947de5ccbc00c47",
     "packages": [
         {
             "name": "mongdch/gaia-framework",
-            "version": "1.1.2",
+            "version": "1.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/gaia-framework.git",
-                "reference": "c7b3cbad2c2c8e6fb6f6b815a603e92f368f3351"
+                "reference": "93adc32f7a0da51c77f79b2b49f3b84bd3ca88a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/c7b3cbad2c2c8e6fb6f6b815a603e92f368f3351",
-                "reference": "c7b3cbad2c2c8e6fb6f6b815a603e92f368f3351",
+                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/93adc32f7a0da51c77f79b2b49f3b84bd3ca88a4",
+                "reference": "93adc32f7a0da51c77f79b2b49f3b84bd3ca88a4",
                 "shasum": ""
             },
             "require": {
@@ -56,9 +56,9 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/gaia-framework/issues",
-                "source": "https://github.com/MonGDCH/gaia-framework/tree/1.1.2"
+                "source": "https://github.com/MonGDCH/gaia-framework/tree/1.1.3"
             },
-            "time": "2024-01-05T05:57:44+00:00"
+            "time": "2024-01-26T01:57:24+00:00"
         },
         {
             "name": "mongdch/mon-console",
@@ -200,20 +200,20 @@
         },
         {
             "name": "mongdch/mon-util",
-            "version": "1.4.10",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/mon-util.git",
-                "reference": "fb4fad01e79b501b58ecacd13b76e7f8c2589a65"
+                "reference": "4cefba1941318734e4dd838286d5628a93838e93"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/mon-util/zipball/fb4fad01e79b501b58ecacd13b76e7f8c2589a65",
-                "reference": "fb4fad01e79b501b58ecacd13b76e7f8c2589a65",
+                "url": "https://api.github.com/repos/MonGDCH/mon-util/zipball/4cefba1941318734e4dd838286d5628a93838e93",
+                "reference": "4cefba1941318734e4dd838286d5628a93838e93",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.6.0",
+                "php": ">=7.2.0",
                 "psr/container": "1.0.0"
             },
             "type": "library",
@@ -246,9 +246,9 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/mon-util/issues",
-                "source": "https://github.com/MonGDCH/mon-util/tree/1.4.10"
+                "source": "https://github.com/MonGDCH/mon-util/tree/1.5.0"
             },
-            "time": "2023-12-13T09:20:28+00:00"
+            "time": "2024-01-18T01:55:21+00:00"
         },
         {
             "name": "psr/container",
