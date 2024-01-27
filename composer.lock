@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f8791aa7f0bb32652947de5ccbc00c47",
+    "content-hash": "94e62171c52e83d622dfa3e72e162711",
     "packages": [
         {
             "name": "mongdch/gaia-framework",
@@ -200,16 +200,16 @@
         },
         {
             "name": "mongdch/mon-util",
-            "version": "1.5.0",
+            "version": "1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/mon-util.git",
-                "reference": "4cefba1941318734e4dd838286d5628a93838e93"
+                "reference": "eb2a585f9ad3991c07f8227d238b67e505a1bd75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/mon-util/zipball/4cefba1941318734e4dd838286d5628a93838e93",
-                "reference": "4cefba1941318734e4dd838286d5628a93838e93",
+                "url": "https://api.github.com/repos/MonGDCH/mon-util/zipball/eb2a585f9ad3991c07f8227d238b67e505a1bd75",
+                "reference": "eb2a585f9ad3991c07f8227d238b67e505a1bd75",
                 "shasum": ""
             },
             "require": {
@@ -246,9 +246,9 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/mon-util/issues",
-                "source": "https://github.com/MonGDCH/mon-util/tree/1.5.0"
+                "source": "https://github.com/MonGDCH/mon-util/tree/1.5.1"
             },
-            "time": "2024-01-18T01:55:21+00:00"
+            "time": "2024-01-27T01:34:29+00:00"
         },
         {
             "name": "psr/container",
@@ -352,40 +352,6 @@
                 "source": "https://github.com/php-fig/log/tree/1.1.4"
             },
             "time": "2021-05-03T11:20:27+00:00"
-        },
-        {
-            "name": "workerman/channel",
-            "version": "v1.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/walkor/channel.git",
-                "reference": "fbfb81c7ebc5858c4053f226cbb5d15fe670ff6e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/walkor/channel/zipball/fbfb81c7ebc5858c4053f226cbb5d15fe670ff6e",
-                "reference": "fbfb81c7ebc5858c4053f226cbb5d15fe670ff6e",
-                "shasum": ""
-            },
-            "require": {
-                "workerman/workerman": ">=4.0.12"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Channel\\": "./src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "homepage": "http://www.workerman.net",
-            "support": {
-                "issues": "https://github.com/walkor/channel/issues",
-                "source": "https://github.com/walkor/channel/tree/v1.2.0"
-            },
-            "time": "2023-04-04T02:47:35+00:00"
         },
         {
             "name": "workerman/workerman",
