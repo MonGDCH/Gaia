@@ -188,7 +188,7 @@ class RedisService
      * @param integer $ping ping的间隔时间
      * @return integer  定时器ID
      */
-    protected function keep(string $key, int $ping): int
+    protected function keep(string $key, int $ping)
     {
         if (isset($this->keeps[$key])) {
             return $this->keeps[$key];
