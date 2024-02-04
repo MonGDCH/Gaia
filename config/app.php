@@ -37,5 +37,16 @@ return [
         'exts'  => ['php', 'html'],
         // 暂停监控服务锁文件未知
         'lock'  => RUNTIME_PATH . '/monitor.lock',
+    ],
+    // 框架钩子
+    'tags'   => [
+        // 应用初始化
+        'app_init' => [],
+        // 应用启动加载进程
+        'app_run' => [],
+        // 基础初始化
+        'process_bootstrap' => [],
+        // 进程启动
+        'process_start' => [],
     ]
 ];
