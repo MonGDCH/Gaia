@@ -39,13 +39,15 @@ return [
         'lock'  => RUNTIME_PATH . '/monitor.lock',
     ],
     // 框架钩子
-    'tags'   => [
+    'hooks'   => [
         // 应用初始化
-        'app_init' => [],
-        // 应用启动加载进程
-        'app_run' => [],
+        'app_init'      => [],
+        // 应用启动
+        'app_start'     => [],
+        // 应用加载进程
+        'app_run'       => [],
         // 基础初始化
-        'process_bootstrap' => [],
+        'process_init'  => [],
         // 进程启动
         'process_start' => [],
     ]

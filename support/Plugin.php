@@ -3,8 +3,11 @@
 namespace support;
 
 use mon\util\File;
+use mon\env\Config;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
+use gaia\interfaces\HookInterface;
+use gaia\interfaces\PluginInterface;
 
 /**
  * 插件安装驱动
@@ -13,8 +16,34 @@ use RecursiveDirectoryIterator;
  * @author Mon <985558837@qq.com>
  * @version 1.0.0
  */
-class Plugin
+class Plugin implements HookInterface
 {
+    /**
+     * Gaia框架插件注册钩子
+     *
+     * @param string $event 钩子名称
+     * @return boolean  返回false则停止继续运行钩子
+     */
+    public function handler(string $event): bool
+    {
+        // 获取指定目录内容
+        $iterator = new RecursiveDirectoryIterator(PLUGIN_PATH, RecursiveDirectoryIterator::SKIP_DOTS | RecursiveDirectoryIterator::FOLLOW_SYMLINKS);
+        foreach ($iterator as $file) {
+            // 获取插件目录
+            if ($file->isDir()) {
+                $plugin = $file->getFilename();
+                $plugin_path = $file->getPathname();
+                // 加载插件配置
+                $plugin_config = $plugin_path . DIRECTORY_SEPARATOR . 'config';
+                if (is_dir($plugin_config)) {
+                    Config::instance()->loadDir($plugin_config, true, [], $plugin);
+                }
+            }
+        }
+
+        return true;
+    }
+
     /**
      * 安装
      *
@@ -46,6 +75,36 @@ class Plugin
     public static function uninstall($event)
     {
         static::callPlugin($event, 'uninstall');
+    }
+
+    /**
+     * 注册启用插件
+     *
+     * @param array  $options  注册参数
+     * @return void
+     */
+    public static function register(array $options = [])
+    {
+        // 插件路径
+        $namespane = '\\plugins\\';
+        // 加载插件
+        $plugins = glob(PLUGIN_PATH . '/**/Bootstrap.php');
+        foreach ($plugins as $plugin) {
+            // 插件路径
+            $plugin_path = dirname($plugin);
+            // 插件名
+            $plugin_name = basename($plugin_path);
+            $className = $namespane . $plugin_name . '\\Bootstrap';
+            if (!class_exists($className) || !is_subclass_of($className, PluginInterface::class)) {
+                // 跳过非插件目录
+                continue;
+            }
+            // 启用插件
+            if ($className::enable()) {
+                // 初始化
+                $className::register($options);
+            }
+        }
     }
 
     /**
