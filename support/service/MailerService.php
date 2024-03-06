@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace app\service;
+namespace support\service;
 
 use mon\env\Config;
 use mon\util\Instance;
