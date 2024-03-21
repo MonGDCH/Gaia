@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "mongdch/gaia-framework",
-            "version": "1.1.5",
+            "version": "1.1.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/gaia-framework.git",
-                "reference": "6e7c410db97c9c5116b94aa5129dfec01e28af0c"
+                "reference": "bd6cf067dd5c8c03f796a796b6fcdca392f895dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/6e7c410db97c9c5116b94aa5129dfec01e28af0c",
-                "reference": "6e7c410db97c9c5116b94aa5129dfec01e28af0c",
+                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/bd6cf067dd5c8c03f796a796b6fcdca392f895dd",
+                "reference": "bd6cf067dd5c8c03f796a796b6fcdca392f895dd",
                 "shasum": ""
             },
             "require": {
@@ -56,9 +56,9 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/gaia-framework/issues",
-                "source": "https://github.com/MonGDCH/gaia-framework/tree/1.1.5"
+                "source": "https://github.com/MonGDCH/gaia-framework/tree/1.1.9"
             },
-            "time": "2024-02-16T08:35:11+00:00"
+            "time": "2024-03-21T09:30:48+00:00"
         },
         {
             "name": "mongdch/mon-console",
@@ -200,16 +200,16 @@
         },
         {
             "name": "mongdch/mon-util",
-            "version": "1.5.2",
+            "version": "1.5.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/mon-util.git",
-                "reference": "5b22a5e923e5f99cce86119b4d6aedf55f3a7d57"
+                "reference": "a4b9b797d8d86bc2833385475ae8a946611a8bd2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/mon-util/zipball/5b22a5e923e5f99cce86119b4d6aedf55f3a7d57",
-                "reference": "5b22a5e923e5f99cce86119b4d6aedf55f3a7d57",
+                "url": "https://api.github.com/repos/MonGDCH/mon-util/zipball/a4b9b797d8d86bc2833385475ae8a946611a8bd2",
+                "reference": "a4b9b797d8d86bc2833385475ae8a946611a8bd2",
                 "shasum": ""
             },
             "require": {
@@ -246,9 +246,9 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/mon-util/issues",
-                "source": "https://github.com/MonGDCH/mon-util/tree/1.5.2"
+                "source": "https://github.com/MonGDCH/mon-util/tree/1.5.4"
             },
-            "time": "2024-02-04T07:43:52+00:00"
+            "time": "2024-03-04T06:50:08+00:00"
         },
         {
             "name": "psr/container",
@@ -355,16 +355,16 @@
         },
         {
             "name": "workerman/workerman",
-            "version": "v4.1.14",
+            "version": "v4.1.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/walkor/workerman.git",
-                "reference": "f7c9667c7b5387c01fa9e50ee79ed931e93ee76e"
+                "reference": "afc8242fc769ab7cf22eb4ac22b97cb59d465e4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/walkor/workerman/zipball/f7c9667c7b5387c01fa9e50ee79ed931e93ee76e",
-                "reference": "f7c9667c7b5387c01fa9e50ee79ed931e93ee76e",
+                "url": "https://api.github.com/repos/walkor/workerman/zipball/afc8242fc769ab7cf22eb4ac22b97cb59d465e4e",
+                "reference": "afc8242fc769ab7cf22eb4ac22b97cb59d465e4e",
                 "shasum": ""
             },
             "require": {
@@ -414,7 +414,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2023-08-09T03:37:45+00:00"
+            "time": "2024-02-19T02:10:39+00:00"
         }
     ],
     "packages-dev": [],

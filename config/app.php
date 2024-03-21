@@ -32,7 +32,7 @@ return [
     // 监控服务
     'monitor'   => [
         // 监控的文件目录
-        'paths' => [APP_PATH, CONFIG_PATH],
+        'paths' => [APP_PATH, CONFIG_PATH, PLUGIN_PATH, SUPPORT_PATH],
         // 监控指定后缀名文件
         'exts'  => ['php', 'html'],
         // 暂停监控服务锁文件未知
@@ -50,5 +50,7 @@ return [
         'process_init'  => [],
         // 进程启动
         'process_start' => [],
+        // 进程错误
+        'process_error' => []
     ]
 ];
