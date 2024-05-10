@@ -9,7 +9,7 @@
 
 return [
     // 是否调试模式
-    'debug'     => env('APP_DEBUG', false),
+    'debug'     => env('APP_DEBUG', true),
     // 时区
     'timezone'  => 'PRC',
     // worker进程配置
@@ -17,13 +17,13 @@ return [
         // 默认的最大可接受数据包大小
         'max_package_size'  => 10 * 1024 * 1024,
         // 存储主进程PID的文件
-        'pid_file'          => RUNTIME_PATH . '/gaia.pid',
+        'pid_file'          => 'gaia.pid',
         // 存储关闭服务标准输出的文件
-        'stdout_file'       => RUNTIME_PATH . '/stdout.log',
+        'stdout_file'       => 'stdout.log',
         // workerman日志记录文件
-        'log_file'          => RUNTIME_PATH . '/workerman.log',
+        'log_file'          => 'workerman.log',
         // 存储主进程状态信息的文件，运行 status 指令后，内容会写入该文件
-        'status_file'       => RUNTIME_PATH . '/gaia.status',
+        'status_file'       => 'gaia.status',
         // workerman事件循环使用对象，默认 \Workerman\Events\Select。一般不需要修改，空则可以
         'event_loop_class'  => '',
         // 发送停止命令后，多少秒内程序没有停止，则强制停止

@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "mongdch/gaia-framework",
-            "version": "1.1.9",
+            "version": "1.1.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/gaia-framework.git",
-                "reference": "bd6cf067dd5c8c03f796a796b6fcdca392f895dd"
+                "reference": "1c5dc53c7d0261c77b691d52d95b9b7c3d193baa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/bd6cf067dd5c8c03f796a796b6fcdca392f895dd",
-                "reference": "bd6cf067dd5c8c03f796a796b6fcdca392f895dd",
+                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/1c5dc53c7d0261c77b691d52d95b9b7c3d193baa",
+                "reference": "1c5dc53c7d0261c77b691d52d95b9b7c3d193baa",
                 "shasum": ""
             },
             "require": {
@@ -56,22 +56,22 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/gaia-framework/issues",
-                "source": "https://github.com/MonGDCH/gaia-framework/tree/1.1.9"
+                "source": "https://github.com/MonGDCH/gaia-framework/tree/1.1.10"
             },
-            "time": "2024-03-21T09:30:48+00:00"
+            "time": "2024-05-10T05:47:30+00:00"
         },
         {
             "name": "mongdch/mon-console",
-            "version": "1.1.2",
+            "version": "1.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/mon-console.git",
-                "reference": "8a7b445b4a3e28f3c0e1836b809b44ba64df6370"
+                "reference": "a8fc56771a6773a5d80350a62d4c0f58dd936a9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/mon-console/zipball/8a7b445b4a3e28f3c0e1836b809b44ba64df6370",
-                "reference": "8a7b445b4a3e28f3c0e1836b809b44ba64df6370",
+                "url": "https://api.github.com/repos/MonGDCH/mon-console/zipball/a8fc56771a6773a5d80350a62d4c0f58dd936a9e",
+                "reference": "a8fc56771a6773a5d80350a62d4c0f58dd936a9e",
                 "shasum": ""
             },
             "require": {
@@ -101,9 +101,9 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/mon-console/issues",
-                "source": "https://github.com/MonGDCH/mon-console/tree/1.1.2"
+                "source": "https://github.com/MonGDCH/mon-console/tree/1.1.3"
             },
-            "time": "2022-11-15T09:58:44+00:00"
+            "time": "2024-03-28T02:53:13+00:00"
         },
         {
             "name": "mongdch/mon-env",
@@ -200,16 +200,16 @@
         },
         {
             "name": "mongdch/mon-util",
-            "version": "1.5.4",
+            "version": "1.5.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/mon-util.git",
-                "reference": "a4b9b797d8d86bc2833385475ae8a946611a8bd2"
+                "reference": "a4f89d00e66f62eab7a4cf40e90e2d2acdbdcab9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/mon-util/zipball/a4b9b797d8d86bc2833385475ae8a946611a8bd2",
-                "reference": "a4b9b797d8d86bc2833385475ae8a946611a8bd2",
+                "url": "https://api.github.com/repos/MonGDCH/mon-util/zipball/a4f89d00e66f62eab7a4cf40e90e2d2acdbdcab9",
+                "reference": "a4f89d00e66f62eab7a4cf40e90e2d2acdbdcab9",
                 "shasum": ""
             },
             "require": {
@@ -246,9 +246,9 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/mon-util/issues",
-                "source": "https://github.com/MonGDCH/mon-util/tree/1.5.4"
+                "source": "https://github.com/MonGDCH/mon-util/tree/1.5.5"
             },
-            "time": "2024-03-04T06:50:08+00:00"
+            "time": "2024-04-15T05:45:46+00:00"
         },
         {
             "name": "psr/container",
