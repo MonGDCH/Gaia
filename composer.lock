@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "94e62171c52e83d622dfa3e72e162711",
+    "content-hash": "099f8d4d605b34766c84128326fd109d",
     "packages": [
         {
             "name": "mongdch/gaia-framework",
-            "version": "1.1.10",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/gaia-framework.git",
-                "reference": "1c5dc53c7d0261c77b691d52d95b9b7c3d193baa"
+                "reference": "7dfcaad87ee5ad65ba7c58b2691d4b152d6b6537"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/1c5dc53c7d0261c77b691d52d95b9b7c3d193baa",
-                "reference": "1c5dc53c7d0261c77b691d52d95b9b7c3d193baa",
+                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/7dfcaad87ee5ad65ba7c58b2691d4b152d6b6537",
+                "reference": "7dfcaad87ee5ad65ba7c58b2691d4b152d6b6537",
                 "shasum": ""
             },
             "require": {
@@ -28,6 +28,7 @@
                 "php": ">=7.2.0",
                 "workerman/workerman": "^4.1"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -56,9 +57,9 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/gaia-framework/issues",
-                "source": "https://github.com/MonGDCH/gaia-framework/tree/1.1.10"
+                "source": "https://github.com/MonGDCH/gaia-framework/tree/master"
             },
-            "time": "2024-05-10T05:47:30+00:00"
+            "time": "2024-06-25T07:35:28+00:00"
         },
         {
             "name": "mongdch/mon-console",
@@ -420,7 +421,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "mongdch/gaia-framework": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
