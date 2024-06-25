@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "099f8d4d605b34766c84128326fd109d",
+    "content-hash": "f779f2104c62880471eea2613cb5260a",
     "packages": [
         {
             "name": "mongdch/gaia-framework",
-            "version": "dev-master",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/gaia-framework.git",
-                "reference": "7dfcaad87ee5ad65ba7c58b2691d4b152d6b6537"
+                "reference": "ac9776e4f441002a4849b205b0e387241c38e26b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/7dfcaad87ee5ad65ba7c58b2691d4b152d6b6537",
-                "reference": "7dfcaad87ee5ad65ba7c58b2691d4b152d6b6537",
+                "url": "https://api.github.com/repos/MonGDCH/gaia-framework/zipball/ac9776e4f441002a4849b205b0e387241c38e26b",
+                "reference": "ac9776e4f441002a4849b205b0e387241c38e26b",
                 "shasum": ""
             },
             "require": {
@@ -28,7 +28,6 @@
                 "php": ">=7.2.0",
                 "workerman/workerman": "^4.1"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -57,22 +56,22 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/gaia-framework/issues",
-                "source": "https://github.com/MonGDCH/gaia-framework/tree/master"
+                "source": "https://github.com/MonGDCH/gaia-framework/tree/1.2.0"
             },
-            "time": "2024-06-25T07:35:28+00:00"
+            "time": "2024-06-25T09:28:17+00:00"
         },
         {
             "name": "mongdch/mon-console",
-            "version": "1.1.3",
+            "version": "1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MonGDCH/mon-console.git",
-                "reference": "a8fc56771a6773a5d80350a62d4c0f58dd936a9e"
+                "reference": "d42d63680a69a28522e7e938744e9b440a104b09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MonGDCH/mon-console/zipball/a8fc56771a6773a5d80350a62d4c0f58dd936a9e",
-                "reference": "a8fc56771a6773a5d80350a62d4c0f58dd936a9e",
+                "url": "https://api.github.com/repos/MonGDCH/mon-console/zipball/d42d63680a69a28522e7e938744e9b440a104b09",
+                "reference": "d42d63680a69a28522e7e938744e9b440a104b09",
                 "shasum": ""
             },
             "require": {
@@ -102,9 +101,9 @@
             ],
             "support": {
                 "issues": "https://github.com/MonGDCH/mon-console/issues",
-                "source": "https://github.com/MonGDCH/mon-console/tree/1.1.3"
+                "source": "https://github.com/MonGDCH/mon-console/tree/1.1.4"
             },
-            "time": "2024-03-28T02:53:13+00:00"
+            "time": "2024-06-25T09:20:43+00:00"
         },
         {
             "name": "mongdch/mon-env",
@@ -421,9 +420,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "mongdch/gaia-framework": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
