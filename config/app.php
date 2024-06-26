@@ -17,9 +17,7 @@ return [
         // 监控的文件目录
         'paths' => [APP_PATH, CONFIG_PATH, PLUGIN_PATH, SUPPORT_PATH],
         // 监控指定后缀名文件
-        'exts'  => ['php', 'html'],
-        // 暂停监控服务锁文件未知
-        'lock'  => RUNTIME_PATH . '/monitor.lock',
+        'exts'  => ['php', 'html']
     ],
     // 框架钩子
     'hooks'   => [
