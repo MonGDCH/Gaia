@@ -128,7 +128,7 @@ class Plugin implements HookInterface
     public static function copydir($source, $dest, $overwrite = false)
     {
         $dest = static::getRootPath() . DIRECTORY_SEPARATOR . $dest;
-        File::instance()->createDir($dest);
+        File::createDir($dest);
         echo "Create Dir $dest\r\n";
         $dir_iterator = new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS);
         $iterator = new RecursiveIteratorIterator($dir_iterator, RecursiveIteratorIterator::SELF_FIRST);
@@ -136,7 +136,7 @@ class Plugin implements HookInterface
         foreach ($iterator as $item) {
             if ($item->isDir()) {
                 $sontDir = $dest . '/' . $iterator->getSubPathName();
-                File::instance()->createDir($sontDir);
+                File::createDir($sontDir);
                 echo "Create Dir $sontDir\r\n";
             } else {
                 $file = $dest . '/' . $iterator->getSubPathName();
@@ -161,7 +161,7 @@ class Plugin implements HookInterface
     public static function copyFile($source, $dest, $overwrite = false)
     {
         $dest = static::getRootPath() . DIRECTORY_SEPARATOR . $dest;
-        File::instance()->copyFile($source, $dest, $overwrite);
+        File::copyFile($source, $dest, $overwrite);
         echo "Create File $dest\r\n";
     }
 
