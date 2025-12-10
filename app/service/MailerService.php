@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace support\service;
+namespace app\service;
 
 use mon\env\Config;
+use RuntimeException;
 use mon\util\Instance;
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -171,8 +172,7 @@ class MailerService
             $this->mailer->send();
             return true;
         } catch (\PHPMailer\PHPMailer\Exception $e) {
-            $this->error = $this->mailer->ErrorInfo;
-            return false;
+            throw new RuntimeException('发送邮件失败：' . $this->mailer->ErrorInfo, $e->getCode(), $e);
         }
     }
 }

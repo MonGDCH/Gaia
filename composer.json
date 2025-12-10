@@ -19,8 +19,9 @@
         }
     ],
     "require": {
-        "php": ">=8.0",
-        "mongdch/gaia-framework": "^1.2"
+        "php": ">=7.4",
+        "mongdch/gaia-framework": "dev-master",
+        "mongdch/mon-http": "dev-master"
     },
     "autoload": {
         "psr-4": {
@@ -28,7 +29,7 @@
         },
         "files": [
             "./support/bootstrap.php",
-            "./support/helpers.php"
+            "./app/helpers.php"
         ]
     },
     "minimum-stability": "stable",
@@ -42,5 +43,11 @@
         "pre-package-uninstall": [
             "support\\Plugin::uninstall"
         ]
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.org/"
+        }
     }
 }

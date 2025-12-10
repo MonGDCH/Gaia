@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace support\service;
+namespace app\service;
 
 use Redis;
 use Throwable;
@@ -1029,7 +1029,7 @@ class RedisService
      * 筛选集合
      *
      * @param  string  $key    键
-     * @param  integer $option 其他信息
+     * @param  array $option 其他信息
      * @return array
      */
     public function sort($key, $option = null)
@@ -1109,8 +1109,8 @@ class RedisService
      * min和max可以是-inf和+inf　表示最大值，最小值
      * 
      * @param string  $key    键
-     * @param integer $start  开始位置
-     * @param integer $end    结束位置
+     * @param string  $start  开始位置
+     * @param string  $end    结束位置
      * @param array   $option 参数
      *     withscores=>true，表示数组下标为Order值，默认返回索引数组
      *     limit=>array(0,1) 表示从0开始，取一条记录。
@@ -1126,8 +1126,8 @@ class RedisService
      * min和max可以是-inf和+inf　表示最大值，最小值
      * 
      * @param string  $key    键
-     * @param integer $start  开始位置
-     * @param integer $end    结束位置
+     * @param string  $start  开始位置
+     * @param string  $end    结束位置
      * @param array   $option 参数
      *     withscores=>true，表示数组下标为Order值，默认返回索引数组
      *     limit=>array(0,1) 表示从0开始，取一条记录。
@@ -1142,8 +1142,8 @@ class RedisService
      * 返回order值在start end之间的数量
      * 
      * @param string  $key   键
-     * @param integer $start 开始位置
-     * @param integer $end   结束位置
+     * @param string  $start 开始位置
+     * @param string  $end   结束位置
      * @return integer
      */
     public function zCount($key, $start, $end)
@@ -1192,8 +1192,8 @@ class RedisService
      * min和max可以是-inf和+inf　表示最大值，最小值
      * 
      * @param string  $key   键
-     * @param integer $start 开始位置
-     * @param integer $end   结束位置
+     * @param string  $start 开始位置
+     * @param string  $end   结束位置
      * @return integer 删除成员的数量。
      */
     public function zRemRangeByScore($key, $start, $end)
@@ -1628,8 +1628,8 @@ class RedisService
     /**
      * 设置客户端的选项
      *
-     * @param string $key   键
-     * @param string $value 值
+     * @param integer   $key   键
+     * @param mixed     $value 值
      * @return boolean
      */
     public function setOption($key, $value)
@@ -1640,7 +1640,7 @@ class RedisService
     /**
      * 取得客户端的选项
      *
-     * @param string $key   键
+     * @param integer $key   键
      * @return mixed
      */
     public function getOption($key)

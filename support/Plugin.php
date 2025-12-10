@@ -3,10 +3,8 @@
 namespace support;
 
 use mon\util\File;
-use mon\env\Config;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
-use gaia\interfaces\HookInterface;
 use gaia\interfaces\PluginInterface;
 
 /**
@@ -16,34 +14,8 @@ use gaia\interfaces\PluginInterface;
  * @author Mon <985558837@qq.com>
  * @version 1.0.0
  */
-class Plugin implements HookInterface
+class Plugin
 {
-    /**
-     * Gaia框架插件注册钩子
-     *
-     * @param string $event 钩子名称
-     * @return boolean  返回false则停止继续运行钩子
-     */
-    public function handler(string $event): bool
-    {
-        // 获取指定目录内容
-        $iterator = new RecursiveDirectoryIterator(PLUGIN_PATH, RecursiveDirectoryIterator::SKIP_DOTS | RecursiveDirectoryIterator::FOLLOW_SYMLINKS);
-        foreach ($iterator as $file) {
-            // 获取插件目录
-            if ($file->isDir()) {
-                $plugin = $file->getFilename();
-                $plugin_path = $file->getPathname();
-                // 加载插件配置
-                $plugin_config = $plugin_path . DIRECTORY_SEPARATOR . 'config';
-                if (is_dir($plugin_config)) {
-                    Config::instance()->loadDir($plugin_config, true, [], $plugin);
-                }
-            }
-        }
-
-        return true;
-    }
-
     /**
      * 安装
      *
@@ -80,15 +52,14 @@ class Plugin implements HookInterface
     /**
      * 注册启用插件
      *
-     * @param array  $options  注册参数
      * @return void
      */
-    public static function register(array $options = [])
+    public static function register()
     {
         // 插件路径
-        $namespane = '\\plugins\\';
+        $namespane = '\\support\\';
         // 加载插件
-        $plugins = glob(PLUGIN_PATH . '/**/Bootstrap.php');
+        $plugins = glob(SUPPORT_PATH . '/**/Bootstrap.php');
         foreach ($plugins as $plugin) {
             // 插件路径
             $plugin_path = dirname($plugin);
@@ -99,11 +70,9 @@ class Plugin implements HookInterface
                 // 跳过非插件目录
                 continue;
             }
-            // 启用插件
-            if ($className::enable()) {
-                // 初始化
-                $className::register($options);
-            }
+
+            // 启动插件
+            $className::start();
         }
     }
 
@@ -125,7 +94,7 @@ class Plugin implements HookInterface
      * @param boolean $overwrite   文件是否覆盖，默认不覆盖
      * @return void
      */
-    public static function copydir($source, $dest, $overwrite = false)
+    public static function copydir(string $source, string $dest, bool $overwrite = false)
     {
         $dest = static::getRootPath() . DIRECTORY_SEPARATOR . $dest;
         File::createDir($dest);
@@ -158,7 +127,7 @@ class Plugin implements HookInterface
      * @param boolean $overwrite    文件是否覆盖，默认不覆盖
      * @return void
      */
-    public static function copyFile($source, $dest, $overwrite = false)
+    public static function copyFile(string $source, string $dest, bool $overwrite = false)
     {
         $dest = static::getRootPath() . DIRECTORY_SEPARATOR . $dest;
         File::copyFile($source, $dest, $overwrite);
