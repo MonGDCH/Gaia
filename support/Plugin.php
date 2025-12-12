@@ -70,7 +70,6 @@ class Plugin
                 // 跳过非插件目录
                 continue;
             }
-
             // 启动插件
             $className::start();
         }

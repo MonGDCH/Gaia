@@ -20,8 +20,7 @@
     ],
     "require": {
         "php": ">=7.4",
-        "mongdch/gaia-framework": "dev-master",
-        "mongdch/mon-http": "dev-master"
+        "mongdch/gaia-framework": "^1.2"
     },
     "autoload": {
         "psr-4": {
@@ -43,11 +42,5 @@
         "pre-package-uninstall": [
             "support\\Plugin::uninstall"
         ]
-    },
-    "repositories": {
-        "packagist": {
-            "type": "composer",
-            "url": "https://packagist.org/"
-        }
     }
 }
