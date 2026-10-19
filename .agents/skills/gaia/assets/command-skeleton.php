@@ -15,9 +15,10 @@ use mon\console\Command;
  */
 class {{NAME}}Command extends Command
 {
-    protected static string $defaultName = '{{DEFAULT_NAME}}';
-    protected static string $defaultDescription = '{{DESCRIPTION}}';
-    protected static string $defaultGroup = 'app';
+    // ⚠️ 必须无类型！父类 mon\console\Command 的同名属性均为无类型声明，加 string 会 Fatal Error
+    protected static $defaultName = '{{DEFAULT_NAME}}';
+    protected static $defaultDescription = '{{DESCRIPTION}}';
+    protected static $defaultGroup = 'app';
 
     /**
      * 执行指令

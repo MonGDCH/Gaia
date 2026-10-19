@@ -5,6 +5,7 @@ namespace app\process;
 
 use gaia\Process;
 use Workerman\Worker;
+use Workerman\Timer;
 use gaia\interfaces\ProcessInterface;
 
 /**
@@ -16,12 +17,12 @@ use gaia\interfaces\ProcessInterface;
 class {{NAME}}Process extends Process implements ProcessInterface
 {
     /**
-     * 进程配置
+     * 进程配置（必须无类型声明，与父类 gaia\Process 保持一致，加 array 会 Fatal Error）
      *
      * @var array
      */
-    protected static array $processConfig = [
-        'listen'     => '{{LISTEN}}',       // 必填，如 'tcp://0.0.0.0:8000'
+    protected static $processConfig = [
+        'listen'     => '{{LISTEN}}',       // 必填，如 'tcp://0.0.0.0:8000'；内部进程用 'tcp://0.0.0.0:0'
         'context'    => [],
         'count'      => 1,
         'transport'  => 'tcp',
@@ -32,22 +33,30 @@ class {{NAME}}Process extends Process implements ProcessInterface
     ];
 
     /**
+     * Timer ID 映射
+     *
+     * @var array<string, integer>
+     */
+    protected array $timerIds = [];
+
+    /**
      * 进程启动
      *
      * @param Worker $worker
+     * @return void
      */
     public function onWorkerStart(Worker $worker): void
     {
-        // TODO: 进程启动初始化业务
-    }
+        // TODO: 注册 Timer 等初始化
+        // $this->timerIds['xxx'] = Timer::add(1, function () { ... });
 
-    /**
-     * 进程停止（必须清理资源）
-     *
-     * @param Worker $worker
-     */
-    public function onWorkerStop(Worker $worker): void
-    {
-        // TODO: 清理 Timer、关闭长连接等
+        // ✅ 进程关闭钩子必须在此注册（禁止定义 onWorkerStop 方法，框架启动时会立即调用同名方法）
+        $worker->onWorkerStop = function (Worker $worker) {
+            // TODO: 清理 Timer、关闭长连接
+            foreach ($this->timerIds as $timerId) {
+                Timer::del($timerId);
+            }
+            $this->timerIds = [];
+        };
     }
 }

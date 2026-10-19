@@ -1,16 +1,19 @@
 <?php
 /**
  * Gaia Project Linter
- * 
+ *
  * 自动检查 Gaia 项目是否符合开发规范
  * 使用：php .agents/skills/gaia/scripts/lint.php
- * 
+ *
  * 检查项：
  * - declare(strict_types=1) 是否存在
+ * - 命名空间与目录是否匹配（app/ 目录下）
  * - Service 类是否使用 Instance trait
- * - Process 类是否有非空 listen 配置
+ * - Process 类 $processConfig 是否存在、是否误加类型、listen 是否为空
+ * - Command/Process 的 $defaultName 等静态属性是否误加类型（父类均无类型）
+ * - Process 是否误定义 onWorkerStop 方法（框架启动时会立即调用同名方法）
  * - Process 是否已在 AppCommand 注册
- * - 命名空间与目录是否匹配
+ * - 是否修改 $GLOBALS（常驻内存红线）
  */
 
 declare(strict_types=1);
@@ -19,31 +22,66 @@ $errors = 0;
 $warnings = 0;
 $rootPath = dirname(__DIR__, 4);
 
+/**
+ * 递归遍历指定目录下所有 PHP 文件
+ *
+ * @param string $dir
+ * @return \Generator<SplFileInfo>
+ */
+function iteratePhpFiles(string $dir): \Generator
+{
+    if (!is_dir($dir)) {
+        return;
+    }
+    $iterator = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS)
+    );
+    foreach ($iterator as $file) {
+        if ($file->getExtension() === 'php') {
+            yield $file;
+        }
+    }
+}
+
 echo "=== Gaia Project Linter ===" . PHP_EOL . PHP_EOL;
 
-// ---------- 1. 检查 declare(strict_types=1) ----------
-echo "[1/5] Checking declare(strict_types=1)..." . PHP_EOL;
+// ---------- 1. declare(strict_types=1) + 命名空间与目录匹配 ----------
+echo "[1/6] Checking declare(strict_types=1) and namespace..." . PHP_EOL;
 $requiredDirs = ['app', 'support'];
 foreach ($requiredDirs as $dir) {
     $fullDir = $rootPath . DIRECTORY_SEPARATOR . $dir;
-    if (!is_dir($fullDir)) continue;
-
-    $iterator = new RecursiveIteratorIterator(
-        new RecursiveDirectoryIterator($fullDir, RecursiveDirectoryIterator::SKIP_DOTS)
-    );
-    foreach ($iterator as $file) {
-        if ($file->getExtension() !== 'php') continue;
+    foreach (iteratePhpFiles($fullDir) as $file) {
+        $relPath = str_replace($rootPath . DIRECTORY_SEPARATOR, '', $file->getPathname());
         $content = file_get_contents($file->getPathname());
+
         if (strpos($content, 'declare(strict_types=1)') === false) {
-            echo "  ❌ MISSING declare: " . str_replace($rootPath . DIRECTORY_SEPARATOR, '', $file->getPathname()) . PHP_EOL;
+            echo "  ❌ MISSING declare: $relPath" . PHP_EOL;
             $errors++;
+        }
+
+        // 命名空间与目录匹配检查（app/ 目录下，仅针对含类/接口/trait 声明的文件；helpers.php 等纯函数文件跳过）
+        if ($dir === 'app' && preg_match('/^\s*(abstract\s+|final\s+)?(class|interface|trait)\s+\w+/m', $content)) {
+            $rel = substr($file->getPathname(), strlen($fullDir) + 1);
+            $subDir = dirname($rel);
+            $expectedNs = $subDir === '.'
+                ? 'app'
+                : 'app\\' . str_replace(DIRECTORY_SEPARATOR, '\\', $subDir);
+            if (preg_match('/^\s*namespace\s+([^;\s]+)\s*;/m', $content, $m)) {
+                if ($m[1] !== $expectedNs) {
+                    echo "  ❌ Namespace mismatch: $relPath (expect `$expectedNs`, got `{$m[1]}`)" . PHP_EOL;
+                    $errors++;
+                }
+            } else {
+                echo "  ⚠️  No namespace found: $relPath" . PHP_EOL;
+                $warnings++;
+            }
         }
     }
 }
 echo "  Done." . PHP_EOL . PHP_EOL;
 
-// ---------- 2. 检查 Service 类 ----------
-echo "[2/5] Checking Service classes..." . PHP_EOL;
+// ---------- 2. Service 类 ----------
+echo "[2/6] Checking Service classes..." . PHP_EOL;
 $serviceDir = $rootPath . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'service';
 if (is_dir($serviceDir)) {
     foreach (glob($serviceDir . DIRECTORY_SEPARATOR . '*Service.php') as $file) {
@@ -59,40 +97,50 @@ if (is_dir($serviceDir)) {
 }
 echo PHP_EOL;
 
-// ---------- 3. 检查 Process 类 listen 配置 ----------
-echo "[3/5] Checking Process listen config..." . PHP_EOL;
+// ---------- 3. Process 类 $processConfig ----------
+echo "[3/6] Checking Process processConfig..." . PHP_EOL;
 $processDir = $rootPath . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'process';
 if (is_dir($processDir)) {
     foreach (glob($processDir . DIRECTORY_SEPARATOR . '*.php') as $file) {
         $name = basename($file);
         $content = file_get_contents($file);
-        if (strpos($content, "'listen' => ''") !== false) {
-            echo "  ⚠️  Empty listen config: app/process/$name (脚手架默认值，需填写)" . PHP_EOL;
+
+        // 类型化属性检测（父类 gaia\Process 无类型，加类型会 Fatal Error）
+        if (preg_match('/static\s+(array|string|int|bool|float)\s+\$processConfig\b/', $content)) {
+            echo "  ❌ Typed \$processConfig (parent gaia\\Process is untyped, Fatal Error): app/process/$name" . PHP_EOL;
+            $errors++;
+            continue;
+        }
+
+        if (!preg_match('/static\s+\$processConfig\s*=/', $content)) {
+            echo "  ⚠️  No \$processConfig defined: app/process/$name" . PHP_EOL;
             $warnings++;
-        } elseif (preg_match("/protected\\s+static\\s+array\\s+\\\$processConfig\\s*=\\s*\\[([^\\]]+)\\]/s", $content, $m)) {
-            if (strpos($m[1], "'listen'") !== false) {
-                echo "  ✅ $name" . PHP_EOL;
-            } else {
-                echo "  ⚠️  Missing listen key: app/process/$name" . PHP_EOL;
-                $warnings++;
-            }
+            continue;
+        }
+
+        // 空 listen 检测（兼容脚手架的对齐空格写法 'listen'        => ''）
+        if (preg_match("/'listen'\s*=>\s*''/", $content)) {
+            echo "  ⚠️  Empty listen config: app/process/$name (需填写，内部进程可用 tcp://0.0.0.0:0)" . PHP_EOL;
+            $warnings++;
+        } else {
+            echo "  ✅ $name" . PHP_EOL;
         }
     }
 }
 echo PHP_EOL;
 
-// ---------- 4. 检查 Process 是否在 AppCommand 注册 ----------
-echo "[4/5] Checking Process registration in AppCommand..." . PHP_EOL;
+// ---------- 4. Process 是否在 AppCommand 注册 ----------
+echo "[4/6] Checking Process registration in AppCommand..." . PHP_EOL;
 $appCmdFile = $rootPath . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'command' . DIRECTORY_SEPARATOR . 'AppCommand.php';
 if (is_file($appCmdFile)) {
     $appCmdContent = file_get_contents($appCmdFile);
-    preg_match("/protected\\s+array\\s+\\\$process\\s*=\\s*\\[([^\\]]*)\\]/s", $appCmdContent, $registeredMatches);
+    preg_match("/protected\s+\\\$process\s*=\s*\[([^\]]*)\]/s", $appCmdContent, $registeredMatches);
     $registered = $registeredMatches[1] ?? '';
 
     if (is_dir($processDir)) {
         foreach (glob($processDir . DIRECTORY_SEPARATOR . '*.php') as $file) {
             $name = basename($file, '.php');
-            if (strpos($registered, $name . '::class') === false && strpos($registered, "'$name'") === false) {
+            if (strpos($registered, "\\\\{$name}::class") === false && strpos($registered, "{$name}::class") === false) {
                 echo "  ⚠️  Not registered: app/process/$name.php (add to AppCommand::\$process)" . PHP_EOL;
                 $warnings++;
             } else {
@@ -105,41 +153,42 @@ if (is_file($appCmdFile)) {
 }
 echo PHP_EOL;
 
-// ---------- 5. 检查 Workerman 常驻内存红线 ----------
-echo "[5/5] Checking resident-memory red lines..." . PHP_EOL;
-if (is_dir($processDir)) {
-    foreach (glob($processDir . DIRECTORY_SEPARATOR . '*.php') as $file) {
-        $name = basename($file);
-        $content = file_get_contents($file);
+// ---------- 5. Workerman 常驻内存红线 ----------
+echo "[5/6] Checking resident-memory red lines..." . PHP_EOL;
+foreach (iteratePhpFiles($rootPath . DIRECTORY_SEPARATOR . 'app') as $file) {
+    $relPath = str_replace($rootPath . DIRECTORY_SEPARATOR, '', $file->getPathname());
+    $content = file_get_contents($file->getPathname());
+
+    // 框架陷阱：禁止定义 onWorkerStop 方法（启动时会被框架同步调用）
+    if (strpos($relPath, 'process' . DIRECTORY_SEPARATOR) !== false
+        && preg_match('/function\s+onWorkerStop\s*\(/', $content)) {
+        echo "  ❌ Defines onWorkerStop() method (framework calls it at STARTUP, use \$worker->onWorkerStop closure instead): $relPath" . PHP_EOL;
+        $errors++;
+    }
+
+    // 父类 mon\console\Command 的 $default* 属性均无类型，子类加类型会 Fatal Error
+    if (preg_match('/static\s+(string|int|bool|array)\s+\$default(Name|Description|Group)\b/', $content)) {
+        echo "  ❌ Typed \$default* property (parent mon\\console\\Command is untyped, Fatal Error): $relPath" . PHP_EOL;
+        $errors++;
+    }
+
+    // Timer 泄漏风险：有 Timer::add 但全文件无 Timer::del
+    if (strpos($relPath, 'process' . DIRECTORY_SEPARATOR) !== false) {
         $hasTimerAdd = strpos($content, 'Timer::add') !== false;
         $hasTimerDel = strpos($content, 'Timer::del') !== false;
-        $hasOnWorkerStop = strpos($content, 'onWorkerStop') !== false;
-        $hasTryCatch = strpos($content, 'try {') !== false;
-
         if ($hasTimerAdd && !$hasTimerDel) {
-            echo "  ❌ Timer leak risk (Timer::add without Timer::del): app/process/$name" . PHP_EOL;
-            $errors++;
-        }
-        if ($hasTimerAdd && !$hasOnWorkerStop) {
-            echo "  ⚠️  Timer cleanup missing onWorkerStop: app/process/$name" . PHP_EOL;
+            echo "  ⚠️  Timer::add without any Timer::del (leak risk if repeatedly added): $relPath" . PHP_EOL;
             $warnings++;
         }
     }
 }
 
-// 检查全局变量修改（PHP 原生实现，兼容 Windows）
-$globalCheckDirs = ['app', 'support'];
+// 检查全局变量修改（app/ 与 support/ 目录）
 $forbiddenPatterns = [
     '/\$GLOBALS\s*\[/' => 'GLOBALS 修改',
 ];
-foreach ($globalCheckDirs as $gDir) {
-    $fullDir = $rootPath . DIRECTORY_SEPARATOR . $gDir;
-    if (!is_dir($fullDir)) continue;
-    $iterator = new RecursiveIteratorIterator(
-        new RecursiveDirectoryIterator($fullDir, RecursiveDirectoryIterator::SKIP_DOTS)
-    );
-    foreach ($iterator as $file) {
-        if ($file->getExtension() !== 'php') continue;
+foreach ($requiredDirs as $gDir) {
+    foreach (iteratePhpFiles($rootPath . DIRECTORY_SEPARATOR . $gDir) as $file) {
         // 跳过 bootstrap.php（正常 define 常量）
         if (strpos($file->getFilename(), 'bootstrap') !== false) continue;
         $content = file_get_contents($file->getPathname());
@@ -151,10 +200,9 @@ foreach ($globalCheckDirs as $gDir) {
         }
     }
 }
-
 echo PHP_EOL;
 
-// ---------- Summary ----------
+// ---------- 6. Summary ----------
 echo "=== Summary ===" . PHP_EOL;
 echo "Errors:   $errors" . PHP_EOL;
 echo "Warnings: $warnings" . PHP_EOL;

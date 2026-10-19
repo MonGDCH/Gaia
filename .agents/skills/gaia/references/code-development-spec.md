@@ -160,7 +160,8 @@ use gaia\interfaces\ProcessInterface;
 
 class Worker extends Process implements ProcessInterface
 {
-    protected static array $processConfig = [
+    // ⚠️ 必须无类型声明！父类 gaia\Process 的 $processConfig 无类型，子类加 array 会 Fatal Error
+    protected static $processConfig = [
         'listen'        => '',          // ← 必须填写监听协议，如 'tcp://0.0.0.0:8000'
         'context'       => [],
         'count'         => 1,           // ← 进程数，建议 CPU 核数
@@ -185,19 +186,20 @@ class Worker extends Process implements ProcessInterface
 ```php
 class AppCommand extends Command
 {
-    protected static string $defaultName = 'app';
-    protected static string $defaultDescription = 'Start the App service.';
+    // ⚠️ 父类 mon\console\Command 的 $default* 属性均无类型，子类加 string 会 Fatal Error
+    protected static $defaultName = 'app';
+    protected static $defaultDescription = 'Start the App service.';
 
     // ↓↓↓ 核心：在这里注册所有要启动的进程 ↓↓↓
-    protected array $process = [
+    protected $process = [
         'worker' => \app\process\Worker::class,
         // 可注册多个进程
         // 'http' => \app\process\HttpProcess::class,
         // 'timer' => \app\process\TimerProcess::class,
     ];
 
-    protected string $name = 'app';
-    protected bool $supportPlugin = true;
+    protected $name = 'app';
+    protected $supportPlugin = true;
 
     public function execute(Input $input, Output $output)
     {
@@ -517,7 +519,8 @@ use gaia\Process;
 
 class WorkerProcess extends Process
 {
-    protected static array $processConfig = [
+    // ⚠️ 必须无类型声明！父类 gaia\Process 的 $processConfig 无类型，子类加 array 会 Fatal Error
+    protected static $processConfig = [
         'listen' => 'tcp://0.0.0.0:8000',
         'count' => 4,
         'reloadable' => true,
@@ -549,8 +552,9 @@ use mon\console\Command;
 
 class AppCommand extends Command
 {
-    protected static string $defaultName = 'app';
-    protected static string $defaultDescription = 'Start the App service.';
+    // ⚠️ 父类 mon\console\Command 的 $default* 属性均无类型，子类加 string 会 Fatal Error
+    protected static $defaultName = 'app';
+    protected static $defaultDescription = 'Start the App service.';
 
     public function execute(Input $input, Output $output)
     {
@@ -651,15 +655,20 @@ Timer::add(30, function () { /* ... */ });  // 泄漏
 // ✅ 正例：RedisService 通过 ping 参数启用保活
 'ping' => 10,  // 每 10 秒 ping 一次
 
-// ✅ 正例：在 onWorkerStop 中关闭连接
-public function onWorkerStop($worker)
+// ✅ 正例：在 onWorkerStart 中注册 $worker->onWorkerStop 闭包，在关闭钩子中关闭连接
+public function onWorkerStart(Worker $worker)
 {
-    foreach ($this->pool as $redis) {
-        $redis->close();
-    }
+    // ...
+    $worker->onWorkerStop = function (Worker $worker) {
+        foreach ($this->pool as $redis) {
+            $redis->close();
+        }
+        $this->pool = [];
+    };
 }
 
-// ❌ 反例：依赖操作系统超时自动断开（进程常驻可能持续数天）
+// ❌ 反例 1：在 Process 类中定义 onWorkerStop() 方法——框架会在启动时同步立即调用它（非关闭钩子）
+// ❌ 反例 2：依赖操作系统超时自动断开（进程常驻可能持续数天）
 ```
 
 #### 红线 4：禁止在类的静态属性中累积请求状态
@@ -1054,7 +1063,10 @@ return [
 
 ### 5.4 资源清理规范【强制】
 
-Workerman 常驻内存中，以下资源**必须**在 `onWorkerStop` 中主动释放：
+> ⚠️ **框架陷阱**：gaia-framework 1.2.x 中，Process 类的 `onWorkerStop()` 方法会在进程**启动时**被框架同步立即调用（`Gaia::bindWorker()` 在执行完 `onWorkerStart` 后直接调用它），**它不是进程关闭钩子**。
+> 禁止在 Process 类中定义 `onWorkerStop()` 方法承载清理逻辑。正确做法：在 `onWorkerStart()` 中显式注册 `$worker->onWorkerStop` 闭包（框架不会覆盖它，Workerman 进程退出时真正调用）。
+
+进程退出前，以下资源**必须**在 `$worker->onWorkerStop` 闭包中主动释放：
 
 | 资源类型 | 清理方式 |
 |----------|----------|
@@ -1065,23 +1077,30 @@ Workerman 常驻内存中，以下资源**必须**在 `onWorkerStop` 中主动�
 | 共享内存 | `shmop_delete($shmid); shmop_close($shmid);` |
 
 ```php
-// ✅ 正例：RedisService 中增加资源清理
-public function onWorkerStop($worker): void
+// ✅ 正例：在 onWorkerStart 中注册关闭钩子，统一清理资源
+public function onWorkerStart(Worker $worker): void
 {
-    // 清理 Timer
-    foreach ($this->keeps as $timerId) {
-        Timer::del($timerId);
-    }
-    $this->keeps = [];
+    // 业务初始化...
+    $this->keeps['heartbeat'] = Timer::add(10, function () { /* ... */ });
 
-    // 关闭 Redis 连接
-    foreach ($this->pool as $redis) {
-        $redis->close();
-    }
-    $this->pool = [];
+    // 注册进程关闭钩子
+    $worker->onWorkerStop = function (Worker $worker): void {
+        // 清理 Timer
+        foreach ($this->keeps as $timerId) {
+            Timer::del($timerId);
+        }
+        $this->keeps = [];
+
+        // 关闭 Redis 长连接
+        foreach ($this->pool as $redis) {
+            $redis->close();
+        }
+        $this->pool = [];
+    };
 }
 
-// ❌ 反例：依赖 Worker 进程退出时操作系统自动释放
+// ❌ 反例 1：在 Process 类中定义 onWorkerStop() 方法——框架启动时会立即调用它，Timer 刚注册就被删除
+// ❌ 反例 2：依赖 Worker 进程退出时操作系统自动释放
 // 常驻内存可能运行数天，连接池会持续增长
 ```
 
@@ -1190,9 +1209,11 @@ main ─────────────────────────
 
 - [ ] Service 类在 `app/service/` 下，且使用 `use Instance` 单例
 - [ ] Service 未反向依赖 Command 或 Process
-- [ ] Process 类在 `app/process/` 下，继承 `gaia\Process`，有 `static::$processConfig`
+- [ ] Process 类在 `app/process/` 下，继承 `gaia\Process`，有无类型的 `static::$processConfig`（加类型会 Fatal Error）
 - [ ] Process 类的 `$processConfig['listen']` 不为空（脚手架默认空字符串会导致无法绑定端口）
+- [ ] Process 类未定义 `onWorkerStop()` 方法（框架启动时会同步调用它）
 - [ ] 新增 Process 类已在 `AppCommand::$process` 数组中注册（否则 `php gaia app` 不会启动它）
+- [ ] Command 类的 `$defaultName` / `$defaultDescription` / `$defaultGroup` 为无类型声明（父类均无类型）
 - [ ] 新增 Command 类已被 Gaia 自动加载（`php gaia` 指令列表中可见）
 - [ ] Command 类在 `app/command/` 下，继承 `mon\console\Command`，类名以 `Command` 结尾
 - [ ] Command 未直接写业务逻辑，委托给 Service
@@ -1200,8 +1221,9 @@ main ─────────────────────────
 
 ### 7.3 Workerman 常驻内存红线
 
-- [ ] Timer 有保存 ID，且在 `onWorkerStop` 中清理
-- [ ] Redis/MySQL 长连接有保活或在 `onWorkerStop` 中关闭
+- [ ] Timer 有保存 ID；重复注册前先 `Timer::del` 旧 ID
+- [ ] 关闭清理通过 `onWorkerStart` 中注册的 `$worker->onWorkerStop` 闭包实现，未定义 `onWorkerStop()` 方法
+- [ ] Redis/MySQL 长连接有保活或在关闭钩子中关闭
 - [ ] 无静态属性累积请求状态（如 `self::$count++`）
 - [ ] Process 的回调方法（`onMessage` / `onConnect` 等）外层有 try-catch
 - [ ] 无单例属性在多次调用间残留状态（如 `$this->err_count` 需在连接正常时清零）
