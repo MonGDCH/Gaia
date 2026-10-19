@@ -1,0 +1,25 @@
+# PHPStan 配置
+# Gaia 项目静态分析工具
+# 使用：phpstan analyse
+
+parameters:
+    # 分析级别：1 是基础级别，2-5 逐级严格
+    level: 1
+
+    # 分析路径
+    paths:
+        - app
+        - support
+
+    # 排除路径
+    excludePaths:
+        - 'vendor/*'
+        - 'runtime/*'
+        - 'bin/*'
+
+    # 忽略的错误（可按需调整）
+    ignoreErrors:
+        # mon\util\Instance 是第三方 trait，忽略其内部类型推断
+        - '#Method mon\\util\\Instance::#i'
+        # Redis 扩展是资源类型，PHPStan 可能推断不准
+        - '#Property Redis#i'
