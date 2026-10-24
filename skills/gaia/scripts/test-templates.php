@@ -7,8 +7,12 @@ $templates = [
     ['config-skeleton.php', 'config-test.php', ['{{CONFIG_DESC}}' => 'test', '{{KEY}}' => 'key', '{{VALUE}}' => 'val']],
     ['queue-consumer.php', 'app/queue/TestDemoQueue.php', ['{{NAME}}' => 'TestDemo', '{{QUEUE_NAME}}' => 'test-demo', '{{DESCRIBE}}' => 'test', '{{DATE}}' => '2026-10-19']],
     ['crontab-task.php', 'app/crontab/TestDemoTask.php', ['{{NAME}}' => 'TestDemo', '{{DATE}}' => '2026-10-19']],
-    ['dao.php', 'app/dao/TestDemoDao.php', ['{{NAME}}' => 'TestDemo', '{{TABLE}}' => 'test_demo', '{{FIELD}}' => 'name']],
-    ['http-middleware.php', 'app/middleware/TestDemoMiddleware.php', ['{{NAME}}' => 'TestDemo', '{{DATE}}' => '2026-10-19']],
+    ['dao.php', 'app/dao/TestDemoDao.php', ['{{NAME}}' => 'TestDemo', '{{MODULE}}' => 'product', '{{DESC}}' => '产品', '{{TABLE}}' => 'test_demo', '{{DATE}}' => '2026-10-19']],
+    ['http-controller.php', 'app/http/controller/TestDemoController.php', ['{{NAME}}' => 'TestDemo', '{{MODULE}}' => 'admin', '{{DESC}}' => '演示', '{{DATE}}' => '2026-10-19']],
+    ['route-file.php', 'app/http/routes/test-demo.php', ['{{NAME}}' => 'TestDemo', '{{MODULE}}' => 'admin', '{{DESC}}' => '演示', '{{PREFIX}}' => 'test-demo']],
+    ['validate.php', 'app/validate/TestDemoValidate.php', ['{{NAME}}' => 'TestDemo', '{{MODULE}}' => 'product', '{{DESC}}' => '演示', '{{DATE}}' => '2026-10-19']],
+    ['enum.php', 'app/contract/enum/TestDemoEnum.php', ['{{NAME}}' => 'TestDemo', '{{DESC}}' => '演示', '{{DATE}}' => '2026-10-19']],
+    ['http-middleware.php', 'app/http/middleware/TestDemoMiddleware.php', ['{{NAME}}' => 'TestDemo', '{{MODULE}}' => 'admin', '{{DATE}}' => '2026-10-19']],
     ['process-plugin.php', 'app/process/TestDemoProcess.php', ['{{NAME}}' => 'TestDemo', '{{DATE}}' => '2026-10-19']],
 ];
 

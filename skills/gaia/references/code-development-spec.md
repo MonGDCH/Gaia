@@ -24,62 +24,75 @@
 
 ```
 gaia/                                  ← 项目根目录
-├── app/                               ← 业务代码目录
-│   ├── command/                       ← 自定义 CLI 指令（mon-console Command）
-│   │   └── AppCommand.php             ← 示例指令
-│   ├── process/                       ← 自定义进程驱动类（gaia\Process）
-│   │   └── .gitignore                 ← 空目录占位
-│   ├── service/                       ← 业务服务层（use Instance 单例）
-│   │   ├── LockService.php            ← 分布式锁服务
-│   │   ├── MailerService.php          ← 邮件服务
-│   │   └── RedisService.php           ← Redis 操作服务
+├── app/                               ← 业务代码目录（命名空间前缀 app\）
+│   ├── command/                       ← 自定义 CLI 指令，*Command.php
+│   ├── contract/                      ← 契约层：枚举、接口、业务异常
+│   │   ├── enum/                      ← 枚举（app\contract\enum）
+│   │   ├── exception/                 ← 业务自定义异常，*Exception.php
+│   │   └── interface/                 ← 业务接口（按模块分子目录，如 wms/）
+│   ├── crontab/                       ← 定时任务，*Task.php，入口方法 handler()
+│   ├── dao/                           ← 数据访问层，*Dao.php（按模块分子目录）
+│   │   └── {product,scm,wms,pda}/     ← 模块 Dao；系统级 Dao 放根目录
+│   ├── http/                          ← HTTP 接入层
+│   │   ├── controller/                ← admin/、pda/ 分端，再按模块分子目录
+│   │   ├── middleware/                ← 中间件（admin/、pda/ 分端）
+│   │   ├── routes/                    ← 路由定义（index.php、admin.php、pda.php + 模块文件）
+│   │   └── view/                      ← 服务端渲染视图（admin/ 按模块分目录）
+│   ├── process/                       ← 自定义进程（默认空，仅 .gitignore）
+│   ├── queue/                         ← 队列消费者，*Queue.php
+│   ├── service/                       ← 业务服务层，*Service.php
+│   ├── validate/                      ← 验证器，*Validate.php（按模块分子目录）
 │   └── helpers.php                    ← 全局辅助函数（env/config 等）
 │
-├── bin/                               ← Windows 进程启动脚本（运行时生成）
-│   └── .gitignore
-│
-├── config/                            ← 应用配置文件（return [] 格式）
-│   ├── app.php                        ← 应用主配置（debug/timezone/hooks/worker/phar）
-│   ├── email.php                      ← 邮件配置
-│   ├── log.php                        ← 日志通道配置
-│   └── redis.php                      ← Redis 连接配置
-│
+├── bin/                               ← 独立应用启动脚本（插件发布 / make:bin 生成）
+├── config/                            ← 应用配置（return [] 格式）
+│   ├── app.php / log.php / redis.php / email.php
+│   └── http/  crontab/  queue/  ...   ← 插件发布的分组配置
+├── public/                            ← Web 根目录（FPM 模式 index.php、静态资源）
 ├── runtime/                           ← 运行时目录（可写，自动生成）
-│   └── .gitignore
-│
-├── support/                           ← 框架支撑层（插件/引导）
-│   ├── bootstrap.php                  ← 常量定义（BASE_PATH/ROOT_PATH/APP_PATH...）
-│   └── Plugin.php                     ← Composer 插件驱动（install/update/uninstall）
-│
+├── support/                           ← 框架支撑层（bootstrap、Plugin、插件发布的进程/中间件）
+├── skills/gaia/                       ← AI 开发技能（SKILL.md、references、assets、scripts）
 ├── vendor/                            ← Composer 依赖（勿改）
 ├── gaia                               ← CLI 入口脚本（#!/usr/bin/env php）
-├── composer.json                      ← composer 配置
-├── composer.dev.json                  ← composer 开发环境配置
-├── .env.example                       ← 环境变量模板
-├── .gitignore
+├── composer.json / composer.dev.json
+├── .env.example / .gitignore
 └── README.md
 ```
 
 ### 1.2 目录角色说明【强制】
 
-| 目录 | 角色 | 命名空间 | 可否新增文件 |
-|------|------|----------|-------------|
-| `app/command/` | CLI 指令 | `app\command\` | ✅ 可新增 |
-| `app/process/` | Workerman 进程驱动 | `app\process\` | ✅ 可新增 |
-| `app/service/` | 业务服务（单例） | `app\service\` | ✅ 可新增 |
-| `config/` | 配置文件 | — (return []) | ✅ 可新增 |
-| `support/` | 框架支撑/插件 | `support\` | ⚠️ 仅插件目录 |
-| `bin/` | 运行时脚本 | — | ❌ 勿手动修改 |
-| `runtime/` | 运行时产物 | — | ❌ 勿手动修改 |
-| `vendor/` | 第三方依赖 | — | ❌ 勿修改 |
+**业务代码一律写在 `app/` 下，禁止在 `support/` 新增业务代码。**
 
-> **命名空间映射**：composer.json 配置 `"": "./"` 作为 PSR-4 根，即文件路径 `app/service/RedisService.php` 对应完全限定名 `app\service\RedisService`。
+| 目录 | 角色 | 命名空间 | 文件后缀 |
+|------|------|----------|----------|
+| `app/command/` | CLI 指令 | `app\command\` | `*Command.php` |
+| `app/contract/enum/` | 枚举 | `app\contract\enum\` | `*Enum.php` |
+| `app/contract/exception/` | 业务异常 | `app\contract\exception\` | `*Exception.php` |
+| `app/contract/interface/` | 业务接口 | `app\contract\interface\` | `*.php` |
+| `app/crontab/` | 定时任务 | `app\crontab\` | `*Task.php` |
+| `app/dao/` | 数据访问（可按模块分子目录） | `app\dao\` | `*Dao.php` |
+| `app/http/controller/` | HTTP 控制器（分端、分模块） | `app\http\controller\` | `*Controller.php` |
+| `app/http/middleware/` | HTTP 中间件 | `app\http\middleware\` | `*Middleware.php` |
+| `app/http/routes/` | 路由定义 | — | `*.php` |
+| `app/http/view/` | 服务端视图 | — | `*.php` / `*.vue` |
+| `app/process/` | Workerman 进程 | `app\process\` | `*Process.php` |
+| `app/queue/` | 队列消费者 | `app\queue\` | `*Queue.php` |
+| `app/service/` | 业务服务 | `app\service\` | `*Service.php` |
+| `app/validate/` | 验证器 | `app\validate\` | `*Validate.php` |
+| `config/` | 配置文件 | — (return []) | `*.php` |
+| `support/` | 框架支撑 / 插件发布文件 | `support\` | ⚠️ 仅插件目录 |
+| `bin/` | 独立应用启动脚本 | — | `*.php` |
+| `runtime/`、`vendor/` | 产物 / 依赖 | — | ❌ 勿手动修改 |
+
+> **命名空间映射**：composer.json 配置 `"": "./"` 作为 PSR-4 根，文件路径即完全限定名，
+> 子目录必须体现在命名空间里：`app/dao/wms/StockDao.php` → `app\dao\wms\StockDao`。
 
 ### 1.3 目录新增规则【强制】
 
-1. **禁止**在 `app/` 下直接放 `.php` 文件，必须归入 `command/`、`process/`、`service/` 之一。
-2. 新增目录需同时更新本节目录结构图。
-3. 若未来引入 HTTP 协议或数据库层，目录扩展方案标注「待补充」。
+1. **禁止**在 `app/` 根目录直接放业务 `.php` 文件（`helpers.php` 除外），必须归入上表对应的角色目录。
+2. 新增模块子目录时，命名空间必须同步带上子目录层级。
+3. 禁止把业务代码写进 `support/`（该目录仅存放框架支撑与插件 `vendor:publish` 产物）。
+4. 新增目录需同时更新本节目录结构图与 README 的「项目结构」章节。
 
 ---
 
@@ -129,8 +142,8 @@ php gaia {{command}} [--opt -v -h ...] [arg0 arg1 arg2=value2 ...]
 |------|------|------|
 | `php gaia make:process <name>` | 生成进程驱动类到 `app/process/` | `php gaia make:process HttpWorker` |
 | `php gaia make:cmd <name>` | 生成 CLI 指令类到 `app/command/` | `php gaia make:cmd CleanCache` |
-| `php gaia make:controller <name>` | 生成 HTTP 控制器 | 标注「待补充」（当前无 HTTP 场景） |
-| `php gaia make:dao <name>` | 生成 DAO 类 | 标注「待补充」（当前无数据库层） |
+| `php gaia make:controller <name>` | 生成 HTTP 控制器（**默认落到 `app/controller/`，需手动移到 `app/http/controller/[端]/` 并改命名空间为 `app\http\controller\[端]`**） | `php gaia make:controller User` |
+| `php gaia make:dao <name>` | 生成 DAO 类到 `app/dao/`（按模块可移到子目录，命名空间同步加模块层级） | `php gaia make:dao User` |
 | `php gaia make:bin <name>` | 生成进程启动脚本 | `php gaia make:bin http` |
 | `php gaia build:phar` | 打包项目为 phar 文件 | `php gaia build:phar` |
 | `php gaia build:bin` | 编译为二进制可执行文件 | `php gaia build:bin` |
@@ -314,8 +327,17 @@ Worker::onWorkerStart 钩子
 | 位置 | 命名空间 |
 |------|----------|
 | `app/command/FooCommand.php` | `app\command` |
+| `app/contract/enum/OrderEnum.php` | `app\contract\enum` |
+| `app/contract/exception/StockException.php` | `app\contract\exception` |
+| `app/contract/interface/wms/StockInterface.php` | `app\contract\interface\wms` |
+| `app/dao/OrderDao.php` | `app\dao` |
+| `app/dao/wms/StockDao.php` | `app\dao\wms` |
+| `app/http/controller/admin/UserController.php` | `app\http\controller\admin` |
+| `app/http/middleware/admin/LoginMiddleware.php` | `app\http\middleware\admin` |
 | `app/process/BarProcess.php` | `app\process` |
+| `app/queue/OrderQueue.php` | `app\queue` |
 | `app/service/BazService.php` | `app\service` |
+| `app/validate/OrderValidate.php` | `app\validate` |
 | `support/Plugin.php` | `support` |
 
 **反例**（命名空间与目录不匹配）：
@@ -336,8 +358,16 @@ namespace app\controller;  // ❌ 应为 app\service
 | 角色 | 后缀 | 正例 | 反例 |
 |------|------|------|------|
 | CLI 指令 | `Command` | `AppCommand` | `App` / `appCommand` |
-| 进程驱动 | 无强制后缀（但推荐 `Process`） | `WorkerProcess` | `workerProcess` |
+| 进程驱动 | 无强制后缀（推荐 `Process`） | `WorkerProcess` | `workerProcess` |
 | 业务服务 | `Service` | `RedisService` | `RedisOperate` / `redisservice` |
+| 控制器 | `Controller` | `UserController` | `User` / `UserCtrl` |
+| 中间件 | `Middleware` | `LoginMiddleware` | `Login` |
+| 数据访问 | `Dao` | `OrderDao` | `OrderModel` / `Order` |
+| 验证器 | `Validate` | `OrderValidate` | `OrderValidator` |
+| 枚举 | `Enum` | `OrderEnum` | `OrderStatus` |
+| 业务异常 | `Exception` | `StockException` | `StockError` |
+| 定时任务 | `Task` | `ClearLogTask` | `ClearLog` |
+| 队列消费者 | `Queue` | `OrderQueue` | `OrderConsumer` |
 | 框架支撑 | 无强制后缀 | `Plugin` | `plugin_util` |
 
 **示例**：
@@ -445,27 +475,69 @@ config/
 
 ### 3.1 分层模型【强制】
 
-Gaia 作为 CLI + Workerman 常驻内存框架，采用以下**三层模型**：
+Gaia 采用**接入层 → 业务层 → 数据层 + 契约层**的分层模型：
 
 ```
-┌──────────────────────────────────────┐
-│  app/command/    ← 入口层（CLI 指令）  │
-│  app/process/    ← 入口层（进程驱动）  │
-├──────────────────────────────────────┤
-│  app/service/    ← 业务层（Service）   │
-├──────────────────────────────────────┤
-│  config/         ← 配置层             │
-│  support/        ← 框架支撑层         │
-└──────────────────────────────────────┘
+┌──────────────────────────────────────────────────────┐
+│  接入层   app/http/controller · middleware · routes    │
+│          app/command · app/process                    │
+│          app/crontab · app/queue                      │
+├──────────────────────────────────────────────────────┤
+│  业务层   app/service/（跨 Dao 编排、外部能力封装）      │
+├──────────────────────────────────────────────────────┤
+│  数据层   app/dao/ ──► think-orm(Db)                   │
+│          app/validate/（入参/数据校验）                 │
+├──────────────────────────────────────────────────────┤
+│  契约层   app/contract/{enum,exception,interface}      │
+│  配置层   config/      框架层  support/                │
+└──────────────────────────────────────────────────────┘
 ```
 
 **依赖方向**：上层 → 下层（单向），禁止反向依赖、禁止同层循环依赖。
 
 ```
-command → service → config
-process → service → config
-service → config（可依赖 config，不可依赖 command/process）
+http/controller ─┐
+http/middleware ─┼─► service ──► dao ──► Db
+command ─────────┤                 └──► validate
+process ─────────┤
+crontab / queue ─┘
+        ↓
+     contract（各层均可依赖）
+
+❌ dao → service      ❌ service → http/controller      ❌ validate → dao
 ```
+
+#### 3.1.1 HTTP 接入层【强制】
+
+| 项 | 规则 |
+|----|------|
+| 路由位置 | `app/http/routes/*.php`；`support/http/Route.php` 只做 `Route::load(APP_PATH . '/http/routes')` |
+| 路由拆分 | 按端分文件（`index.php`、`admin.php`、`pda.php`），端内再按模块分子文件（`admin/product.php`） |
+| 控制器 | `app/http/controller/[端]/[模块]/XxxController.php`，继承 `support\http\Controller` |
+| 响应 | 统一用基类 `success()` / `error()` / `text()` / `json()` / `download()` / `fetch()` |
+| 视图 | `app/http/view/[端]/[模块]/`，`support/http/extends/Template.php` 的 `$view_path` 指向该目录 |
+| 禁止 | 控制器内直接写 SQL / 直接操作 Redis；路由写进 `support/` 或 `config/` |
+
+#### 3.1.2 数据访问层与验证器【强制】
+
+| 项 | 规则 |
+|----|------|
+| Dao 位置 | `app/dao/`（系统级）或 `app/dao/[模块]/`（模块级），命名空间同步带模块层级 |
+| Dao 基类 | `mon\thinkORM\Dao`，并 `use mon\util\Instance` |
+| 方法约定 | 列表筛选统一抽 `queryScope(array $data)` 返回 `Query`，供列表/导出复用 |
+| 校验 | `$validate` 属性指向 `app\validate\...` 的验证器，写入前 `$this->validate()->scope('add')->data($data)->checked()` |
+| 异常 | 数据层失败抛业务异常（`BusinessException` 或 `app\contract\exception\*`），禁止返回 `false` 后由上层猜测 |
+| 禁止 | 在 Dao 里做跨表业务编排、调用 Service |
+
+#### 3.1.3 契约层【强制】
+
+| 目录 | 内容 | 规则 |
+|------|------|------|
+| `app/contract/enum/` | 原生 `enum` | 带 `text()` 等描述方法，禁止散落魔法数字 |
+| `app/contract/exception/` | 业务异常 | 继承内置异常或 `mon\http\exception\BusinessException`，消息带上下文 |
+| `app/contract/interface/` | 业务接口 | 按模块分子目录；实现类放 `app/service/` 或 `app/dao/` |
+
+**禁止**：契约层反向依赖 service / dao / controller。
 
 ### 3.2 Service 层【强制】
 
@@ -1207,12 +1279,20 @@ main ─────────────────────────
 
 ### 7.2 分层与依赖
 
-- [ ] Service 类在 `app/service/` 下，且使用 `use Instance` 单例
-- [ ] Service 未反向依赖 Command 或 Process
+- [ ] 所有业务文件都在 `app/` 下，未在 `support/` 新增业务代码
+- [ ] 文件落位正确：Controller→`app/http/controller/[端]/`、Dao→`app/dao/[模块]/`、Validate→`app/validate/`、Enum/Exception→`app/contract/`
+- [ ] 命名空间与目录层级完全一致（含模块子目录）
+- [ ] 依赖方向单向：`controller/middleware/command/process/crontab/queue → service → dao → Db`，无反向依赖
+- [ ] 路由定义在 `app/http/routes/*.php`，`support/http/Route.php` 仅做 `Route::load()`
+- [ ] 控制器继承 `support\http\Controller`，响应使用基类方法，未直接写 SQL/Redis
+- [ ] Dao 继承 `mon\thinkORM\Dao` 且 `use Instance`，列表筛选抽成 `queryScope()`
+- [ ] Service 类在 `app/service/` 下，默认使用 `use Instance` 单例
+- [ ] Service 未反向依赖 Command / Controller / Process
 - [ ] Process 类在 `app/process/` 下，继承 `gaia\Process`，有无类型的 `static::$processConfig`（加类型会 Fatal Error）
 - [ ] Process 类的 `$processConfig['listen']` 不为空（脚手架默认空字符串会导致无法绑定端口）
 - [ ] Process 类未定义 `onWorkerStop()` 方法（框架启动时会同步调用它）
 - [ ] 新增 Process 类已在 `AppCommand::$process` 数组中注册（否则 `php gaia app` 不会启动它）
+- [ ] 未同时用 `bin/xxx.php` 启动同一个进程（避免端口冲突）
 - [ ] Command 类的 `$defaultName` / `$defaultDescription` / `$defaultGroup` 为无类型声明（父类均无类型）
 - [ ] 新增 Command 类已被 Gaia 自动加载（`php gaia` 指令列表中可见）
 - [ ] Command 类在 `app/command/` 下，继承 `mon\console\Command`，类名以 `Command` 结尾

@@ -25,6 +25,12 @@ $callback = $plugin . '::publish';
 `support\Plugin::copydir()` / `copyFile()` 第三个参数 `$overwrite`，所有插件均传 **`true`**。
 重新发布会覆盖用户已改过的 `config/`、`support/`、`app/` 文件 → 发布前必须提醒用户备份 / 先提交版本库。
 
+> 🐛 **已知坑**：`support/Plugin.php::copydir()` 原实现为 `copy($item, $file)`，`$item` 是 `SplFileInfo`。
+> 由于该文件声明了 `declare(strict_types=1)`，PHP 8 会抛
+> `copy(): Argument #1 ($from) must be of type string, SplFileInfo given`，导致**所有带目录发布的插件**
+> （mon-http / gaia-queue / gaia-crontab / gaia-gateway / gaia-channel / gaia-nat）发布中断。
+> 修复方式：改为 `copy($item->getPathname(), $file)`。
+
 ### 0.3 独立应用启动脚本骨架
 
 发布到 `bin/xxx.php` 的脚本统一结构：
@@ -40,6 +46,9 @@ public function run()
 
 因此都支持 Workerman 全系命令：`start` / `start -d` / `stop` / `restart` / `reload` / `status`。
 Windows 不支持 `-d`，由框架生成 `runtime/gaia/windows/start_*.php` 后 `proc_open` 托管。
+
+> **优先方案**：把插件进程类注册到 `app/command/AppCommand.php` 的 `$process`，用 `php gaia app` 统一启停；
+> `bin/xxx.php` 仅用于「独立部署 / 独立伸缩」。两者**不可同时启动同一进程**。
 
 ### 0.4 配置读取规则
 
@@ -94,6 +103,28 @@ return [
 ];
 ```
 
+### 1.2.1 业务代码落位（重要）
+
+`mon-http` 只提供**能力**，业务代码一律放 `app/` 下：
+
+| 内容 | 落位 | 说明 |
+|------|------|------|
+| 路由 | `app/http/routes/*.php` | `support/http/Route.php` 改为 `Route::load(APP_PATH . '/http/routes')`，**不再直接写路由** |
+| 控制器 | `app/http/controller/[端]/[模块]/XxxController.php` | 继承 `support\http\Controller` |
+| 中间件 | `app/http/middleware/[端]/XxxMiddleware.php` | 实现 `MiddlewareInterface` |
+| 视图 | `app/http/view/[端]/[模块]/` | 需把 `support/http/extends/Template.php` 的 `$view_path` 指到 `APP_PATH . '/http/view/'` |
+| 进程注册 | `app/command/AppCommand.php::$process` | `'http' => \support\http\process\Http::class` |
+
+```php
+// support/http/Route.php —— 只做加载
+Route::load(APP_PATH . DIRECTORY_SEPARATOR . 'http' . DIRECTORY_SEPARATOR . 'routes');
+```
+
+```php
+// app/http/routes/index.php
+Route::instance()->get('/test/{name}', [IndexController::class, 'test']);
+```
+
 ### 1.3 路由 API（`mon\http\Route`）
 
 ```php
@@ -122,6 +153,15 @@ route('test');   // 助手函数获取路径
 
 `map()` 返回 `mon\http\Router`（可链式调用 `->name()`）。
 回调支持：闭包、`[类::class, 'method']`、`'User@index'`（配合 `namespace`）。
+
+> ⚠️ **路径不自动 urldecode**：`dispatch()` 使用的是原始 `path()`，中文/特殊字符参数是百分号编码形式
+> （如 `/test/%E5%BC%A0%E4%B8%89`）。路由回调中需要 `urldecode($param)` 才能拿到 `张三`：
+
+```php
+Route::instance()->get('/test/{name}', function (string $name) {
+    return 'Hello ' . urldecode($name);   // GET /test/张三 → Hello 张三
+});
+```
 
 ### 1.4 请求 `mon\http\Request`
 

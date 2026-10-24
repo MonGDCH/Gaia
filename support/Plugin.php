@@ -113,7 +113,8 @@ class Plugin
                     continue;
                 }
 
-                copy($item, $file);
+                // strict_types 下不能把 SplFileInfo 直接传给 copy()，需取真实路径
+                copy($item->getPathname(), $file);
                 echo "Create File $file\r\n";
             }
         }

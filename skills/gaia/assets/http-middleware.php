@@ -1,7 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
-namespace app\middleware;
+namespace app\http\middleware\{{MODULE}};
 
 use Closure;
 use mon\log\Logger;
@@ -27,7 +28,7 @@ class {{NAME}}Middleware implements MiddlewareInterface
     public function process(RequestInterface $request, Closure $next): Response
     {
         try {
-            // TODO: 前置逻辑（鉴权、限流、日志等）
+            // TODO: 前置逻辑（鉴权、限流、上下文注入等）
         } catch (\Throwable $e) {
             Logger::error('{{NAME}} 中间件前置处理失败', ['error' => $e->getMessage()]);
 

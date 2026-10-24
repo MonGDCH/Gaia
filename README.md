@@ -14,6 +14,164 @@ composer create-project mongdch/gaia
 
 ---
 
+## 项目结构
+
+### 业务目录（`app/`）
+
+**业务代码一律写在 `app/` 目录下**，命名空间前缀统一为 `app\`（composer PSR-4 根为 `""`，文件路径即命名空间）：
+
+```
+├── app/                            # 业务代码（命名空间前缀 app\）
+│   ├── command/                    # 自定义命令行（php gaia xxx），*Command.php
+│   ├── contract/                   # 契约层：枚举、接口、业务异常
+│   │   ├── enum/                   # 枚举（命名空间 app\contract\enum）
+│   │   ├── exception/              # 业务自定义异常，*Exception.php
+│   │   └── interface/              # 业务接口（按模块分子目录，如 wms/）
+│   ├── crontab/                    # 定时任务，*Task.php，入口方法统一 handler()
+│   ├── dao/                        # 数据访问层，*Dao.php（按业务模块分子目录）
+│   │   ├── product/                # 产品模块 Dao
+│   │   ├── scm/                    # 供应链模块 Dao
+│   │   ├── wms/                    # 仓储模块 Dao
+│   │   ├── pda/                    # PDA 端 Dao
+│   │   └── *.php                   # 系统级 Dao（AdminDao、AuthRuleDao 等）
+│   ├── http/                       # HTTP 接入层
+│   │   ├── controller/
+│   │   │   ├── admin/              # 管理后台接口（按模块分子目录：product/scm/wms/sys）
+│   │   │   ├── pda/                # PDA 端接口
+│   │   │   └── IndexController.php
+│   │   ├── middleware/             # 中间件（admin/、pda/ 分端）
+│   │   ├── routes/                 # 路由定义（admin/ 按模块分文件 + admin.php、pda.php、index.php）
+│   │   ├── view/                   # 服务端渲染的视图（.vue 经模板引擎解析，可内嵌 PHP）
+│   │   │   └── admin/              # 后台页面（home/layout/product/scm/sys/wms 按模块分目录）
+│   ├── process/                    # 自定义 Workerman 进程（目录默认空，仅保留 .gitignore）
+│   ├── queue/                      # 队列消费者，*Queue.php
+│   ├── service/                    # 业务服务层，*Service.php（跨 Dao 编排、外部能力封装）
+│   ├── validate/                   # 验证器，*Validate.php（按模块分子目录）
+│   └── helpers.php                 # 全局助手函数（autoload files，谨慎新增）
+```
+
+| 目录 | 命名空间 | 角色 | 文件后缀 |
+|------|----------|------|----------|
+| `app/command/` | `app\command\` | CLI 指令 | `*Command.php` |
+| `app/contract/enum/` | `app\contract\enum\` | 枚举 | `*Enum.php` |
+| `app\contract/exception/` | `app\contract\exception\` | 业务异常 | `*Exception.php` |
+| `app/contract/interface/` | `app\contract\interface\` | 业务接口 | `*.php` |
+| `app/crontab/` | `app\crontab\` | 定时任务 | `*Task.php` |
+| `app/dao/` | `app\dao\`（含子目录） | 数据访问 | `*Dao.php` |
+| `app/http/controller/` | `app\http\controller\` | HTTP 控制器 | `*Controller.php` |
+| `app/http/middleware/` | `app\http\middleware\` | 中间件 | `*Middleware.php` |
+| `app/http/routes/` | —（纯路由定义） | 路由注册 | `*.php` |
+| `app/http/view/` | —（模板文件） | 服务端视图 | `*.php` / `*.vue` |
+| `app/process/` | `app\process\` | Workerman 进程 | `*Process.php` |
+| `app/queue/` | `app\queue\` | 队列消费者 | `*Queue.php` |
+| `app/service/` | `app\service\` | 业务服务 | `*Service.php` |
+| `app/validate/` | `app\validate\`（含子目录） | 验证器 | `*Validate.php` |
+
+### 分层调用约定
+
+分层依赖**单向流动**，禁止反向与同层循环依赖：
+
+```
+http/controller ─┐
+http/middleware ─┼─► service ──► dao ──► think-orm(Db)
+command ─────────┤                 │
+process ─────────┤                 └──► validate（校验入参/数据）
+crontab ─────────┘
+queue ───────────┘
+        ↓
+     contract（enum / exception / interface，各层均可依赖）
+```
+
+| 分层 | 职责 | 禁止 |
+|------|------|------|
+| `http/controller` | 接收请求、参数校验、调用 Service、返回响应 | 写 SQL / 直接操作 Redis |
+| `http/middleware` | 鉴权、限流、日志、上下文注入 | 承载业务逻辑 |
+| `service` | 跨 Dao 的业务编排、外部能力封装 | 反向依赖 controller / process |
+| `dao` | 单表数据访问、内置验证器校验 | 跨表复杂编排（应由 service 完成） |
+| `validate` | 规则/提示/场景定义 | 直接查库 |
+| `contract` | 枚举、业务异常、接口契约 | 依赖上层实现 |
+
+> `service` 默认使用 `mon\util\Instance` 单例；确实需要每次新建实例（如带请求级状态）时可不使用单例。
+> `dao` 同样 `use Instance`，通过 `XxxDao::instance()` 调用。
+
+### 路由注册
+
+路由**不允许**直接写在 `support/http/Route.php`，该文件只负责加载：
+
+```php
+// support/http/Route.php
+Route::load(APP_PATH . DIRECTORY_SEPARATOR . 'http' . DIRECTORY_SEPARATOR . 'routes');
+```
+
+业务路由按端/模块拆分在 `app/http/routes/`：
+
+```php
+// app/http/routes/index.php
+use mon\http\Route;
+use app\http\controller\IndexController;
+
+Route::instance()->get('/', [IndexController::class, 'index']);
+Route::instance()->get('/test/{name}', [IndexController::class, 'test']);
+```
+
+```php
+// app/http/routes/admin.php —— 按端分组，再加载模块文件
+Route::instance()->group('/admin', function (Route $route) {
+    $dir = __DIR__ . '/admin';
+    foreach (scandir($dir) as $file) {
+        if ($file === '.' || $file === '..' || is_dir($dir . '/' . $file)) {
+            continue;
+        }
+        require $dir . '/' . $file;
+    }
+});
+```
+
+控制器继承 `support\http\Controller`，可直接使用 `$this->success()` / `$this->error()` / `$this->text()` / `$this->json()` / `$this->fetch()`：
+
+```php
+// app/http/controller/IndexController.php
+namespace app\http\controller;
+
+use mon\http\Request;
+use support\http\Controller;
+
+class IndexController extends Controller
+{
+    public function test(Request $request, string $name)
+    {
+        return $this->text('Hello ' . urldecode($name));
+    }
+}
+```
+
+> 视图目录：`support/http/extends/Template.php` 的 `$view_path` 已指向 `app/http/view/`。
+
+### 进程统一管理
+
+新建进程后，**优先注册到 `app/command/AppCommand.php` 的 `$process`**，由 `php gaia app` 统一拉起、统一启停：
+
+```php
+// app/command/AppCommand.php
+protected $process = [
+    'http'            => \support\http\process\Http::class,
+    'crontab-server'  => \support\crontab\process\Server::class,
+    'crontab-task'    => \support\crontab\process\Task::class,
+    'queue'           => \support\queue\process\Queue::class,
+    'channel'         => \support\channel\process\Channel::class,
+    // 自定义进程
+    // 'worker'       => \app\process\WorkerProcess::class,
+];
+```
+
+```bash
+php gaia app            # 统一启动全部进程
+```
+
+> 插件自带的 `bin/xxx.php` 适用于「独立部署、独立伸缩」场景。**同一个进程不要在两处同时启动**，否则会端口冲突。
+
+---
+
 ## 插件生态
 
 框架采用「内核 + 插件」的方式组织能力，内核（`mongdch/gaia-framework`）只负责进程/指令/配置的生命周期管理，
@@ -53,15 +211,17 @@ php bin/queue.php start
 
 | 方式 | 说明 | 适用场景 |
 |------|------|----------|
-| 独立应用（推荐） | 插件发布 `bin/xxx.php` 启动脚本，内部执行 `App::init('应用名')` 后 `Gaia::instance()->runProcess()`，与主应用 `php gaia app` 完全隔离 | 插件能力独立部署、独立伸缩、独立重启 |
-| 合并到主应用 | 将插件发布的进程类注册到 `app/command/AppCommand.php` 的 `$process` 数组，统一由 `php gaia app` 拉起 | 单体部署、进程数量少 |
+| 统一注册到 AppCommand（推荐） | 将插件发布的进程类注册到 `app/command/AppCommand.php` 的 `$process` 数组，统一由 `php gaia app` 拉起 | 单体部署、进程需要统一启停 |
+| 独立应用 | 插件发布 `bin/xxx.php` 启动脚本，内部执行 `App::init('应用名')` 后 `Gaia::instance()->runProcess()`，与主应用 `php gaia app` 完全隔离 | 插件能力独立部署、独立伸缩、独立重启 |
 
 ```php
-// app/command/AppCommand.php —— 合并到主应用的方式
+// app/command/AppCommand.php —— 统一管理全部进程
 protected $process = [
-    'http'      => \support\http\process\Http::class,
-    'queue'     => \support\queue\process\Queue::class,
-    'crontab'   => \support\crontab\process\Server::class,
+    'http'           => \support\http\process\Http::class,
+    'queue'          => \support\queue\process\Queue::class,
+    'crontab-server' => \support\crontab\process\Server::class,
+    'crontab-task'   => \support\crontab\process\Task::class,
+    'channel'        => \support\channel\process\Channel::class,
 ];
 ```
 
@@ -90,7 +250,7 @@ config/http/middleware.php # 中间件配置
 config/http/session.php    # Session 配置
 config/http/throttle.php   # 限流配置
 support/http/process/Http.php  # HTTP 进程
-support/http/Route.php     # 路由定义文件
+support/http/Route.php     # 路由加载入口（加载 app/http/routes）
 support/http/Controller.php    # 控制器基类
 support/http/ErrorHandler.php  # 异常处理器
 support/http/middleware/       # 内置中间件(Cors/Firewall/Throttle)
@@ -119,22 +279,22 @@ return [
 ];
 ```
 
-**定义路由**（`support/http/Route.php`）：
+**定义路由**（`app/http/routes/*.php`，由 `support/http/Route.php` 统一加载）：
 
 ```php
 use mon\http\Route;
-use mon\http\Router;
-
-// 闭包路由
-Route::instance()->get('/[{name}]', function ($name = 'Gaia HTTP') {
-    return "Hello {$name}!";
-});
+use app\http\controller\IndexController;
 
 // 控制器路由
-Route::instance()->get('/user', [\app\controller\UserController::class, 'index']);
+Route::instance()->get('/user', [\app\http\controller\UserController::class, 'index']);
+
+// 闭包路由
+Route::instance()->get('/ping', function () {
+    return 'pong';
+});
 
 // 路由组 + 中间件 + 命名空间
-Route::instance()->group(['path' => '/api', 'middleware' => \support\http\middleware\CorsMiddleware::class], function ($route) {
+Route::instance()->group(['path' => '/api', 'middleware' => \app\http\middleware\AuthMiddleware::class], function ($route) {
     $route->post('/login', 'User@login');   // 配合 namespace 使用
 });
 
@@ -144,7 +304,7 @@ Route::instance()->map(['GET', 'POST'], '/search', function (\mon\http\Request $
 });
 
 // 命名路由，可通过 route('test') 获取路径
-Route::instance()->get('/test', [\app\controller\Index::class, 'test'])->name('test');
+Route::instance()->get('/test', [IndexController::class, 'test'])->name('test');
 
 // 静态文件路由
 Route::instance()->file('/static', ROOT_PATH . '/public/static');
@@ -176,7 +336,7 @@ redirect('https://gdmon.com', 302);
 **自定义中间件**（实现 `mon\http\interfaces\MiddlewareInterface`）：
 
 ```php
-namespace app\middleware;
+namespace app\http\middleware;
 
 use Closure;
 use mon\http\interfaces\MiddlewareInterface;

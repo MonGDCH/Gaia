@@ -78,6 +78,8 @@ description: 为 Gaia Workerman 框架开发 PHP CLI 常驻内存服务 当用�
 | 启动应用 | `php gaia app` |
 | 查看配置 | `php gaia config:get [key.path]` |
 | 打包 phar | `php gaia build:phar` |
+| 查看全部路由 | `php gaia route:show` |
+| 统一启动全部进程 | `php gaia app` |
 | 代码规范检查 | `php skills/gaia/scripts/lint.php` |
 | 安装插件 | `composer require mongdch/<插件包名>` |
 | 发布插件资源 | `php gaia vendor:publish <发布命名空间>` |
@@ -113,6 +115,55 @@ php bin/<插件>.php start [-d]            # 3. 启动（或把进程注册到 A
 
 ---
 
+## 📁 项目目录结构（业务代码落位）
+
+**所有业务代码必须写在 `app/` 下，禁止在 `support/` 写业务代码。** 新建文件前先按下表确定落位：
+
+```
+├── app/                            # 业务代码（命名空间前缀 app\）
+│   ├── command/                    # 自定义命令行（php gaia xxx），*Command.php
+│   ├── contract/                   # 契约层：枚举、接口、业务异常
+│   │   ├── enum/                   # 枚举（app\contract\enum）
+│   │   ├── exception/              # 业务自定义异常，*Exception.php
+│   │   └── interface/              # 业务接口（按模块分子目录，如 wms/）
+│   ├── crontab/                    # 定时任务，*Task.php，入口方法统一 handler()
+│   ├── dao/                        # 数据访问层，*Dao.php（按业务模块分子目录）
+│   │   ├── product/  scm/  wms/  pda/
+│   │   └── AdminDao.php ...        # 系统级 Dao 放根目录
+│   ├── http/                       # HTTP 接入层
+│   │   ├── controller/             # admin/、pda/ 分端，再按模块分子目录
+│   │   ├── middleware/             # admin/、pda/ 分端
+│   │   ├── routes/                 # 路由定义（index.php、admin.php、pda.php + admin/ 模块文件）
+│   │   └── view/                   # 服务端渲染视图（admin/ 按模块分目录）
+│   ├── process/                    # 自定义 Workerman 进程（默认空，仅保留 .gitignore）
+│   ├── queue/                      # 队列消费者，*Queue.php
+│   ├── service/                    # 业务服务层，*Service.php
+│   ├── validate/                   # 验证器，*Validate.php（按模块分子目录）
+│   └── helpers.php                 # 全局助手函数（谨慎新增）
+```
+
+### 落位决策表
+
+| 要写的东西 | 放哪里 | 说明 |
+|-----------|--------|------|
+| HTTP 接口 | `app/http/controller/[端]/[模块]/XxxController.php` + `app/http/routes/[端].php` | **路由禁止写在 `support/http/Route.php`**，该文件只做 `Route::load(APP_PATH . '/http/routes')` |
+| 鉴权/限流/上下文 | `app/http/middleware/[端]/XxxMiddleware.php` | 在 `config/http/middleware.php` 或路由 `group(['middleware' => ...])` 挂载 |
+| 页面模板 | `app/http/view/[端]/[模块]/` | `support/http/extends/Template.php` 的 `$view_path` 指向 `app/http/view/` |
+| SQL / 单表操作 | `app/dao/[模块]/XxxDao.php` | `use Instance`，`XxxDao::instance()` |
+| 入参/数据校验 | `app/validate/[模块]/XxxValidate.php` | 继承 `mon\util\Validate`，定义 `$rule` / `$message` / `$scope` |
+| 跨表业务编排 | `app/service/XxxService.php` | 默认 `use Instance` |
+| 枚举/常量 | `app/contract/enum/XxxEnum.php` | 原生 `enum`，实现 `text()` 等方法 |
+| 业务异常 | `app/contract/exception/XxxException.php` | 继承内置异常或 `BusinessException` |
+| CLI 指令 | `app/command/XxxCommand.php` | 业务逻辑委托 Service |
+| 常驻进程 | `app/process/XxxProcess.php` | **必须注册到 `AppCommand::$process`** |
+| 定时任务 | `app/crontab/XxxTask.php` | 入口方法固定 `handler()` |
+| 队列消费者 | `app/queue/XxxQueue.php` | 实现 `ConsumerInterface`，自动扫描 |
+
+> 新增目录层级（如按模块分子目录）时，命名空间必须同步带上子目录：
+> `app/dao/wms/StockDao.php` → `namespace app\dao\wms;`
+
+---
+
 ## 🔴 强制规则（不可违反）
 
 ### 规则 1：文件头格式【强制】
@@ -140,48 +191,82 @@ declare(strict_types=1);
 
 ### 规则 2：命名空间映射（PSR-4，根为 ""）【强制】
 
-composer.json 配置 `"": "./"`，文件路径直接对应完全限定名：
+composer.json 配置 `"": "./"`，文件路径直接对应完全限定名（**含子目录**）：
 
 | 文件路径 | 完全限定名 |
 |----------|-----------|
-| `app/service/RedisService.php` | `app\service\RedisService` |
-| `app/process/Worker.php` | `app\process\Worker` |
 | `app/command/CleanCacheCommand.php` | `app\command\CleanCacheCommand` |
+| `app/contract/enum/OrderEnum.php` | `app\contract\enum\OrderEnum` |
+| `app/contract/exception/StockException.php` | `app\contract\exception\StockException` |
+| `app/contract/interface/wms/StockInterface.php` | `app\contract\interface\wms\StockInterface` |
+| `app/dao/OrderDao.php` | `app\dao\OrderDao` |
+| `app/dao/wms/StockDao.php` | `app\dao\wms\StockDao` |
+| `app/http/controller/admin/UserController.php` | `app\http\controller\admin\UserController` |
+| `app/http/middleware/admin/LoginMiddleware.php` | `app\http\middleware\admin\LoginMiddleware` |
+| `app/process/WorkerProcess.php` | `app\process\WorkerProcess` |
+| `app/queue/OrderQueue.php` | `app\queue\OrderQueue` |
+| `app/service/OrderService.php` | `app\service\OrderService` |
+| `app/validate/OrderValidate.php` | `app\validate\OrderValidate` |
 | `support/Plugin.php` | `support\Plugin` |
 
-**反例**：`app/service/RedisService.php` 里写 `namespace app\controller;` ❌
+**反例**：`app/dao/wms/StockDao.php` 里写 `namespace app\dao;` ❌（子目录必须体现在命名空间）
 
 ### 规则 3：分层依赖方向（单向）【强制】
 
 ```
-command → service → config
-process → service → config
-service → config（❌ 禁止依赖 command 或 process）
+http/controller ─┐
+http/middleware ─┼─► service ──► dao ──► think-orm(Db)
+command ─────────┤                 │
+process ─────────┤                 └──► validate
+crontab / queue ─┘
+        ↓
+     contract（enum / exception / interface，各层均可依赖）
 ```
 
-Service 类**必须**使用 `use mon\util\Instance;` 单例 trait。
+| 分层 | 放什么 | 禁止 |
+|------|--------|------|
+| `http/controller` | 接参、校验、调 Service、返回响应 | 写 SQL、直接操作 Redis |
+| `http/middleware` | 鉴权、限流、上下文注入 | 承载业务逻辑 |
+| `service` | 跨 Dao 编排、外部能力封装 | 依赖 controller / process |
+| `dao` | 单表数据访问 + 内置验证器 | 跨表复杂编排 |
+| `validate` | 规则 / 提示 / 场景 | 查库 |
+
+- `Service` 类**默认**使用 `use mon\util\Instance;`（单例）；确需每次新建实例（带请求级状态）时可不使用。
+- `Dao` 类同样 `use Instance`，对外通过 `XxxDao::instance()` 调用。
+- 禁止 `dao` 依赖 `service`、禁止 `service` 依赖 `http/*` 或 `process`。
 
 **反例**：
 
 ```php
-// ❌ Service 反向依赖 Command
+// ❌ Service 反向依赖 Command / Controller
 namespace app\service;
 use app\command\AppCommand;
+use app\http\controller\IndexController;
 ```
 
-### 规则 4：类角色后缀【强制】
+### 规则 4：类角色后缀与落位【强制】
 
-| 角色 | 必需后缀 | 必须继承 |
-|------|---------|---------|
-| Service | `Service` | 无（但必须 use Instance trait） |
-| Process | 推荐 `Process` | `gaia\Process` |
-| Command | `Command` | `mon\console\Command` |
+| 角色 | 目录 | 后缀 | 必须继承 / 实现 |
+|------|------|------|----------------|
+| Command | `app/command/` | `Command` | `mon\console\Command` |
+| Controller | `app/http/controller/[端]/[模块]/` | `Controller` | `support\http\Controller` |
+| Middleware | `app/http/middleware/[端]/` | `Middleware` | `mon\http\interfaces\MiddlewareInterface` |
+| Service | `app/service/` | `Service` | 无（默认 `use Instance`） |
+| Dao | `app/dao/[模块]/` | `Dao` | `mon\thinkORM\Dao` + `use Instance` |
+| Validate | `app/validate/[模块]/` | `Validate` | `mon\util\Validate` |
+| Enum | `app/contract/enum/` | `Enum` | 原生 `enum`（`: string` / `: int`） |
+| 业务异常 | `app/contract/exception/` | `Exception` | 内置异常或 `mon\http\exception\BusinessException` |
+| 接口契约 | `app/contract/interface/[模块]/` | 无强制 | `interface` |
+| 定时任务 | `app/crontab/` | `Task` | 无（入口方法固定 `handler()`） |
+| 队列消费者 | `app/queue/` | `Queue` | `gaia\queue\ConsumerInterface` |
+| Process | `app/process/` | 推荐 `Process` | `gaia\Process` |
 
 **反例**：
 
 ```php
-class RedisOperate { }        // ❌ 没有 Service 后缀
-class Foo extends Command { } // ❌ 没有 Command 后缀
+class RedisOperate { }                       // ❌ 没有 Service 后缀
+class Foo extends Command { }                // ❌ 没有 Command 后缀
+app/service/OrderDao.php                     // ❌ Dao 错放到 service 目录
 ```
 
 ### 规则 5：Workerman 常驻内存 6 条红线【强制】
@@ -271,23 +356,37 @@ class StatService
 }
 ```
 
-### 规则 6：Process 必须注册【强制】
+### 规则 6：Process 必须注册到 AppCommand【强制】
 
-通过 `make:process` 生成的进程类，**必须**在 `app/command/AppCommand.php` 的 `$process` 数组中注册：
+**新建进程（含插件提供的进程）优先统一注册到 `app/command/AppCommand.php` 的 `$process`**，由 `php gaia app` 统一启停：
 
 ```php
 class AppCommand extends Command
 {
-    // ↓↓↓ 在这里注册所有要启动的进程 ↓↓↓（与实际 AppCommand 一致，无类型声明）
+    // ↓↓↓ 在这里注册所有要启动的进程 ↓↓↓（无类型声明）
     protected $process = [
-        'worker'    => \app\process\Worker::class,
-        'http'      => \app\process\HttpProcess::class,
-        'cron'      => \app\process\CronProcess::class,
+        // 插件进程
+        'http'           => \support\http\process\Http::class,
+        'queue'          => \support\queue\process\Queue::class,
+        'crontab-server' => \support\crontab\process\Server::class,
+        'crontab-task'   => \support\crontab\process\Task::class,
+        'channel'        => \support\channel\process\Channel::class,
+        // 自定义进程
+        'worker'         => \app\process\WorkerProcess::class,
     ];
 }
 ```
 
-**不注册的后果**：`php gaia app` 报「未定义启动进程!」然后退出。
+**规则要点**：
+
+| 项 | 要求 |
+|----|------|
+| 注册位置 | `app/command/AppCommand.php::$process`（**唯一入口**，优先方案） |
+| 进程名 | 小写短横线，如 `crontab-server`、`message-worker` |
+| 独立部署 | 仅当需要独立伸缩/独立重启时，才用 `bin/xxx.php`（`php gaia make:bin` 生成） |
+| 禁止 | 同一进程既注册到 `AppCommand` 又用 `bin/xxx.php` 启动（端口冲突） |
+
+**不注册的后果**：`php gaia app` 报「未定义启动进程!」然后退出，或该进程根本不会启动。
 
 ### 规则 7：异常处理【强制】
 
@@ -477,7 +576,7 @@ class QueueConsumerProcess extends Process implements ProcessInterface
 1. **禁止造轮子**：需求命中「插件能力索引」时，**必须**先安装并 `vendor:publish` 对应插件，再基于插件扩展业务；禁止手写 HTTP 路由分发、Redis 队列消费、Cron 表达式解析等插件已提供的能力。
 2. **禁止手抄配置**：插件配置一律来自 `vendor:publish` 发布的 `config/<插件>/*.php`，**禁止**自己新建同名配置文件或凭记忆写配置项。改配置优先改 `.env` 环境变量。
 3. **发布会覆盖**：`vendor:publish` 为**强制覆盖**（`$overwrite = true`）。提醒用户：插件升级后重新发布会覆盖已修改的 `config/`、`support/`、`app/` 文件。
-4. **进程二选一**：插件进程要么走插件自带的 `bin/xxx.php`（独立应用，推荐），要么注册到 `AppCommand::$process`（合并到主应用）。**同一进程不要两处都启动**，否则端口冲突。
+4. **进程统一注册**：插件进程优先注册到 `AppCommand::$process`，由 `php gaia app` 统一管理；仅「独立部署/独立伸缩」场景才用插件自带的 `bin/xxx.php`。**同一进程不要两处都启动**，否则端口冲突。
 5. **插件代码同样受常驻内存红线约束**：`ORM::register(true)`、`CacheService` 保活、`gaia-queue` 消费进程内部都会注册 `Timer`，自定义 Process 中如调用它们，仍需在 `$worker->onWorkerStop` 闭包中做清理。
 6. **消费者/任务类必须 try-catch**：`gaia\queue\ConsumerInterface::consume()`、`app\crontab\*Task::handler()` 内部**必须**捕获 `\Throwable` 并用 `Logger` 记录，异常外抛会导致消费进程/调度进程异常。
 7. **命名空间来自 composer**：`vendor:publish` 的参数 = 插件 `composer.json` 中 `autoload.psr-4` 的 key（去掉尾部反斜杠），例如 `mon\http`、`gaia\queue`。不确定时读插件包的 `src/Install.php` 顶部 `namespace`。
@@ -485,6 +584,238 @@ class QueueConsumerProcess extends Process implements ProcessInterface
 ---
 
 ## 🧱 标准骨架代码
+
+### HTTP Controller 骨架
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace app\http\controller\{{MODULE}};
+
+use mon\http\Request;
+use support\http\Controller;
+use app\service\{{NAME}}Service;
+
+/**
+ * {{DESC}} 控制器
+ *
+ * @author Mon <985558837@qq.com>
+ * @version 1.0.0 {{DATE}}
+ */
+class {{NAME}}Controller extends Controller
+{
+    /**
+     * 列表
+     *
+     * @param Request $request 请求实例
+     * @return \mon\http\Response
+     */
+    public function index(Request $request)
+    {
+        $data = $request->json();
+        $result = {{NAME}}Service::instance()->getList($data);
+
+        return $this->success('ok', $result);
+    }
+
+    /**
+     * 详情（路由参数按名称注入）
+     *
+     * @param Request $request 请求实例
+     * @param string $id 记录ID
+     * @return \mon\http\Response
+     */
+    public function detail(Request $request, string $id)
+    {
+        $info = {{NAME}}Service::instance()->getInfo((int) $id);
+
+        return $this->success('ok', $info);
+    }
+}
+```
+
+> 控制器基类 `support\http\Controller` 提供：`$this->success($msg, $data)` / `$this->error($msg)` /
+> `$this->text()` / `$this->json()` / `$this->file()` / `$this->download()` / `$this->fetch()` / `$this->validate()`。
+> 路由参数按**参数名**注入，类型化对象参数由容器解析。
+
+### 路由定义骨架
+
+```php
+<?php
+/*
+|--------------------------------------------------------------------------
+| 定义 {{DESC}} 路由
+|--------------------------------------------------------------------------
+*/
+
+declare(strict_types=1);
+
+use mon\http\Route;
+use app\http\controller\{{MODULE}}\{{NAME}}Controller;
+
+Route::instance()->group('/{{PREFIX}}', function (Route $route) {
+    $route->get('', [{{NAME}}Controller::class, 'index'])->name('{{PREFIX}}.index');
+    $route->get('/detail/{id}', [{{NAME}}Controller::class, 'detail'])->name('{{PREFIX}}.detail');
+});
+```
+
+### Dao 骨架
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace app\dao\{{MODULE}};
+
+use mon\thinkORM\Dao;
+use mon\util\Instance;
+use app\validate\{{MODULE}}\{{NAME}}Validate;
+
+/**
+ * {{DESC}} 数据访问对象
+ *
+ * @author Mon <985558837@qq.com>
+ * @version 1.0.0 {{DATE}}
+ */
+class {{NAME}}Dao extends Dao
+{
+    use Instance;
+
+    /**
+     * 操作表名（不含前缀）
+     *
+     * @var string
+     */
+    protected $table = '{{TABLE}}';
+
+    /**
+     * 自动写入时间戳
+     *
+     * @var boolean
+     */
+    protected $autoWriteTimestamp = true;
+
+    /**
+     * 验证器
+     *
+     * @var string
+     */
+    protected $validate = {{NAME}}Validate::class;
+
+    /**
+     * 查询条件构造（列表/导出复用）
+     *
+     * @param array $data 筛选条件
+     * @return \mon\thinkORM\extend\Query
+     */
+    public function queryScope(array $data = [])
+    {
+        $query = $this->db();
+        if (isset($data['id']) && $this->validate()->int($data['id'])) {
+            $query->where('id', intval($data['id']));
+        }
+        if (isset($data['status']) && $this->validate()->int($data['status'])) {
+            $query->where('status', intval($data['status']));
+        }
+
+        return $query->order('id', 'desc');
+    }
+}
+```
+
+### Validate 骨架
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace app\validate\{{MODULE}};
+
+use mon\util\Validate;
+
+/**
+ * {{DESC}} 验证器
+ *
+ * @author Mon <985558837@qq.com>
+ * @version 1.0.0 {{DATE}}
+ */
+class {{NAME}}Validate extends Validate
+{
+    /**
+     * 验证规则
+     *
+     * @var array
+     */
+    public $rule = [
+        'id'     => ['required', 'id'],
+        'name'   => ['required', 'str', 'length:1,50'],
+        'status' => ['required', 'in:0,1'],
+    ];
+
+    /**
+     * 错误提示
+     *
+     * @var array
+     */
+    public $message = [
+        'id'     => '参数异常',
+        'name'   => '名称格式错误',
+        'status' => '状态值错误',
+    ];
+
+    /**
+     * 验证场景
+     *
+     * @var array
+     */
+    public $scope = [
+        'add'  => ['name', 'status'],
+        'edit' => ['id', 'name', 'status'],
+    ];
+}
+```
+
+### Enum 骨架
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace app\contract\enum;
+
+/**
+ * {{DESC}} 枚举
+ *
+ * @author Mon <985558837@qq.com>
+ * @version 1.0.0 {{DATE}}
+ */
+enum {{NAME}}Enum: int
+{
+    /** 禁用 */
+    case Status_Disable = 0;
+
+    /** 启用 */
+    case Status_Enable = 1;
+
+    /**
+     * 获取文本描述
+     *
+     * @return string
+     */
+    public function text(): string
+    {
+        return match ($this) {
+            self::Status_Disable => '禁用',
+            self::Status_Enable  => '启用',
+        };
+    }
+}
+```
 
 ### Service 骨架
 
@@ -668,12 +999,24 @@ return [
 
 **代码写完后必须逐项确认**：
 
+**目录与分层**：
+
+- [ ] 所有业务文件都在 `app/` 下，未在 `support/` 写业务代码
+- [ ] 文件落位符合「目录结构 / 落位决策表」（Controller、Dao、Validate、Enum、Exception 各归其位）
+- [ ] 命名空间与目录层级完全一致（含模块子目录，如 `app\dao\wms\`）
+- [ ] 依赖方向单向：`controller → service → dao → Db`，未出现反向或同层循环依赖
+- [ ] 路由写在 `app/http/routes/*.php`，未写进 `support/http/Route.php`
+- [ ] `Dao` / `Validate` / `Enum` 等按模块放在对应子目录
+
+**基础规范**：
+
 - [ ] 每个新文件都有 `declare(strict_types=1);`
-- [ ] Service 类使用 `use Instance` 单例 trait
+- [ ] Service 类使用 `use Instance` 单例 trait（或有明确理由不用）
+- [ ] Dao 类使用 `use Instance`，对外通过 `XxxDao::instance()` 调用
 - [ ] Process 类的 `$processConfig` 为**无类型**声明，且 `listen` 不为空（内部进程可用 `tcp://0.0.0.0:0`）
 - [ ] Command 的 `$defaultName` / `$defaultDescription` / `$defaultGroup` 为**无类型**声明（父类均无类型，加类型会 Fatal Error）
 - [ ] Process **未定义** `onWorkerStop()` 方法；关闭清理通过 `onWorkerStart` 中注册 `$worker->onWorkerStop` 闭包实现
-- [ ] Process 已在 `AppCommand::$process` 注册
+- [ ] 新进程已在 `AppCommand::$process` 注册（与 `bin/xxx.php` 二选一）
 - [ ] 无静态属性存请求状态
 - [ ] 回调方法（`onMessage` 等）业务逻辑外层有 `try-catch(\Throwable $e)`
 - [ ] 日志用 `Logger::info/error/warning`，没有 `echo` 或 `file_put_contents`
