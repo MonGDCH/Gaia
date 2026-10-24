@@ -1,6 +1,6 @@
 ---
 name: gaia
-description: 为 Gaia Workerman 框架开发 PHP CLI 常驻内存服务 当用户要求创建进程 服务 指令 注册业务逻辑 或调试 Workerman 常驻内存问题时使用
+description: 为 Gaia Workerman 框架开发 PHP CLI 常驻内存服务 当用户要求创建进程 服务 指令 注册业务逻辑 使用 HTTP ORM 缓存 队列 定时任务 跨进程通信 WebSocket 内网穿透等插件能力 或调试 Workerman 常驻内存问题时使用
 ---
 
 # Gaia 框架开发技能
@@ -29,6 +29,15 @@ description: 为 Gaia Workerman 框架开发 PHP CLI 常驻内存服务 当用�
 | `锁服务` / `Redis 连接池` | "帮我写个 Gaia 的 LockService" |
 | `phar 打包` / `build:phar` | "Gaia 怎么打包成 phar？" |
 | `Gaia 指令` / `CLI 指令` | "帮我加个清理缓存的 CLI 指令" |
+| `HTTP` / `接口` / `路由` / `中间件` / `Controller` | "用 Gaia 写个登录接口" |
+| `mon-http` / `vendor:publish` / `插件` | "mon-http 怎么发布配置？" |
+| `ORM` / `Dao` / `数据库` / `查询` / `事务` | "写个 UserDao 查询用户" |
+| `缓存` / `Cache` / `mon-cache` | "用缓存存验证码" |
+| `队列` / `Queue` / `消费者` / `延迟队列` / `消息` | "订单支付后发个队列消息" |
+| `定时任务` / `定时` / `Crontab` / `Cron` | "每天凌晨清理日志" |
+| `跨进程` / `进程通信` / `Channel` / `广播` / `发布订阅` | "多进程间广播事件" |
+| `WebSocket` / `长连接` / `Gateway` / `推送` | "写个 WebSocket 聊天室" |
+| `内网穿透` / `NAT` / `外网访问` | "把本地服务穿透到外网" |
 
 ### 触发示例
 
@@ -44,6 +53,18 @@ description: 为 Gaia Workerman 框架开发 PHP CLI 常驻内存服务 当用�
 **用户说**："Workerman 的 Timer 要清理吗？"
 → **触发**："Workerman" + "Timer" → 告知红线规则 + 代码示例
 
+**用户说**："用 Gaia 写个用户登录接口"
+→ **触发**："HTTP" + "接口" → `mon-http` 插件 → 路由 + 控制器 + 中间件
+
+**用户说**："订单支付成功后异步发短信"
+→ **触发**："队列" → `gaia-queue` 插件 → 消费者 + `QueueService::syncSend`
+
+**用户说**："每天凌晨 2 点清理过期订单"
+→ **触发**："定时任务" → `gaia-crontab` 插件 → Task 类 + job 配置
+
+**用户说**："多个进程之间怎么广播消息"
+→ **触发**："跨进程" → `gaia-channel` 插件 → `ChannelService::publish/on`
+
 ---
 
 ## 🚀 快速命令速查
@@ -57,7 +78,38 @@ description: 为 Gaia Workerman 框架开发 PHP CLI 常驻内存服务 当用�
 | 启动应用 | `php gaia app` |
 | 查看配置 | `php gaia config:get [key.path]` |
 | 打包 phar | `php gaia build:phar` |
-| 代码规范检查 | `php .agents/skills/gaia/scripts/lint.php` |
+| 代码规范检查 | `php skills/gaia/scripts/lint.php` |
+| 安装插件 | `composer require mongdch/<插件包名>` |
+| 发布插件资源 | `php gaia vendor:publish <发布命名空间>` |
+| 启动插件服务 | `php bin/<插件>.php start [-d]` |
+
+---
+
+## 🔌 插件能力索引（需求 → 插件）
+
+**遇到以下需求时，优先使用对应插件，禁止自己从零手撸实现。**
+
+| 需求 | 插件 | composer 包名 | 发布命名空间 | 核心类 / 入口 |
+|------|------|---------------|--------------|---------------|
+| HTTP 接口、路由、中间件、Session | mon-http | `mongdch/mon-http` | `mon\http` | `mon\http\Route`、`support\http\process\Http`、`bin/http.php` |
+| 数据库查询、事务、Dao | think-orm | `mongdch/think-orm` | `mon\thinkORM` | `mon\thinkORM\Dao`、`mon\thinkORM\Db`、`mon\thinkORM\ORM::register()` |
+| 缓存读写 | mon-cache | `mongdch/mon-cache` | `mon\cache` | `support\cache\CacheService::instance()` |
+| 异步任务、削峰、延迟执行 | gaia-queue | `mongdch/gaia-queue` | `gaia\queue` | `gaia\queue\ConsumerInterface`、`support\queue\QueueService`、`bin/queue.php` |
+| 定时执行任务 | gaia-crontab | `mongdch/gaia-crontab` | `gaia\crontab` | `app\crontab\XxxTask`、`config/crontab/job.php`、`bin/crontab.php` |
+| 跨进程事件广播 / 事件队列 | gaia-channel | `mongdch/gaia-channel` | `gaia\channel` | `support\channel\ChannelService::instance()`、`bin/channel.php` |
+| WebSocket 推送、长连接 | gaia-gateway | `mongdch/gaia-gateway` | `gaia\gateway` | `app\gateway\Event`、`support\gateway\GatewayService`、`bin/gateway.php` |
+| 本地服务暴露到外网 | gaia-nat | `mongdch/gaia-nat` | `gaia\nat` | `bin/nat_server.php`、`bin/nat_client.php` |
+
+**插件接入三步曲**（任何插件都按这个顺序）：
+
+```bash
+composer require mongdch/<包名>          # 1. 安装
+php gaia vendor:publish <发布命名空间>    # 2. 发布配置/进程/示例代码
+php bin/<插件>.php start [-d]            # 3. 启动（或把进程注册到 AppCommand::$process）
+```
+
+> 完整插件用法（配置项、API 清单、常驻内存注意事项、典型场景代码）见
+> → [references/plugins.md](references/plugins.md)
 
 ---
 
@@ -420,6 +472,16 @@ class QueueConsumerProcess extends Process implements ProcessInterface
 | 配置文件 | 小写无下划线 | `redis.php` `app.php` | `RedisConfig.php` `log_config.php` |
 | Command `$defaultName` | 冒号分隔或短横线 | `clean:cache` `queue-consume` | `cleancache` |
 
+### 规则 11：插件使用规则【强制】
+
+1. **禁止造轮子**：需求命中「插件能力索引」时，**必须**先安装并 `vendor:publish` 对应插件，再基于插件扩展业务；禁止手写 HTTP 路由分发、Redis 队列消费、Cron 表达式解析等插件已提供的能力。
+2. **禁止手抄配置**：插件配置一律来自 `vendor:publish` 发布的 `config/<插件>/*.php`，**禁止**自己新建同名配置文件或凭记忆写配置项。改配置优先改 `.env` 环境变量。
+3. **发布会覆盖**：`vendor:publish` 为**强制覆盖**（`$overwrite = true`）。提醒用户：插件升级后重新发布会覆盖已修改的 `config/`、`support/`、`app/` 文件。
+4. **进程二选一**：插件进程要么走插件自带的 `bin/xxx.php`（独立应用，推荐），要么注册到 `AppCommand::$process`（合并到主应用）。**同一进程不要两处都启动**，否则端口冲突。
+5. **插件代码同样受常驻内存红线约束**：`ORM::register(true)`、`CacheService` 保活、`gaia-queue` 消费进程内部都会注册 `Timer`，自定义 Process 中如调用它们，仍需在 `$worker->onWorkerStop` 闭包中做清理。
+6. **消费者/任务类必须 try-catch**：`gaia\queue\ConsumerInterface::consume()`、`app\crontab\*Task::handler()` 内部**必须**捕获 `\Throwable` 并用 `Logger` 记录，异常外抛会导致消费进程/调度进程异常。
+7. **命名空间来自 composer**：`vendor:publish` 的参数 = 插件 `composer.json` 中 `autoload.psr-4` 的 key（去掉尾部反斜杠），例如 `mon\http`、`gaia\queue`。不确定时读插件包的 `src/Install.php` 顶部 `namespace`。
+
 ---
 
 ## 🧱 标准骨架代码
@@ -616,7 +678,16 @@ return [
 - [ ] 回调方法（`onMessage` 等）业务逻辑外层有 `try-catch(\Throwable $e)`
 - [ ] 日志用 `Logger::info/error/warning`，没有 `echo` 或 `file_put_contents`
 - [ ] 异常消息包含上下文
-- [ ] 运行 `php .agents/skills/gaia/scripts/lint.php` 通过
+- [ ] 运行 `php skills/gaia/scripts/lint.php` 通过
+
+**使用了插件时额外确认**：
+
+- [ ] 插件已执行 `composer require` + `php gaia vendor:publish <命名空间>`，配置来自发布文件而非手写
+- [ ] 插件进程只在一处启动（`bin/xxx.php` 或 `AppCommand::$process`，不重复）
+- [ ] 队列消费者实现 `gaia\queue\ConsumerInterface` 且放在 `app/queue/`；`consume()` 内有 `try-catch`
+- [ ] 定时任务类放在 `app/crontab/`，默认入口方法为 `handler()`；`handler()` 内有 `try-catch`
+- [ ] 常驻内存进程用到 ORM 时调用了 `ORM::register(true)`；用到 HTTP 时注册了 `ORMMiddleware`
+- [ ] 已提醒用户 `vendor:publish` 会覆盖已修改的 `config/` / `support/` / `app/` 文件
 
 ---
 
@@ -625,3 +696,11 @@ return [
 完整开发规范（目录结构图、命名规范、分层模型、Workerman 常驻内存红线、Code Review Checklist）：
 
 → [references/code-development-spec.md](references/code-development-spec.md)
+
+插件完整用法（安装/发布/配置项/API 清单/常驻内存注意事项/典型场景）：
+
+→ [references/plugins.md](references/plugins.md)
+
+插件代码模板（队列消费者、定时任务、Dao、HTTP 控制器、HTTP 中间件、Gateway 事件）：
+
+→ [assets/](assets/)

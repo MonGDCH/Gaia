@@ -3,7 +3,7 @@
  * Gaia Project Linter
  *
  * 自动检查 Gaia 项目是否符合开发规范
- * 使用：php .agents/skills/gaia/scripts/lint.php
+ * 使用：php skills/gaia/scripts/lint.php
  *
  * 检查项：
  * - declare(strict_types=1) 是否存在
@@ -20,7 +20,40 @@ declare(strict_types=1);
 
 $errors = 0;
 $warnings = 0;
-$rootPath = dirname(__DIR__, 4);
+
+/**
+ * 定位项目根目录
+ *
+ * 兼容两种技能安装位置：
+ * - <项目>/skills/gaia/scripts/lint.php
+ * - <项目>/.agents/skills/gaia/scripts/lint.php
+ *
+ * 判定依据：同时存在 composer.json、app 目录与 gaia 启动文件的目录
+ *
+ * @param string $start
+ * @return string
+ */
+function detectRootPath(string $start): string
+{
+    $dir = $start;
+    for ($i = 0; $i < 8; $i++) {
+        if (is_file($dir . DIRECTORY_SEPARATOR . 'composer.json')
+            && is_dir($dir . DIRECTORY_SEPARATOR . 'app')
+            && is_file($dir . DIRECTORY_SEPARATOR . 'gaia')) {
+            return $dir;
+        }
+        $parent = dirname($dir);
+        if ($parent === $dir) {
+            break;
+        }
+        $dir = $parent;
+    }
+
+    return dirname(__DIR__, 4);
+}
+
+$rootPath = detectRootPath(__DIR__);
+echo 'Project root: ' . $rootPath . PHP_EOL . PHP_EOL;
 
 /**
  * 递归遍历指定目录下所有 PHP 文件

@@ -5,6 +5,11 @@ $templates = [
     ['process-skeleton.php', 'app/process/TestDemoProcess.php', ['{{NAME}}' => 'TestDemo', '{{LISTEN}}' => 'tcp://0.0.0.0:9000', '{{DATE}}' => '2026-10-19']],
     ['command-skeleton.php', 'app/command/TestDemoCommand.php', ['{{NAME}}' => 'TestDemo', '{{DEFAULT_NAME}}' => 'test:demo', '{{DESCRIPTION}}' => 'test', '{{DATE}}' => '2026-10-19']],
     ['config-skeleton.php', 'config-test.php', ['{{CONFIG_DESC}}' => 'test', '{{KEY}}' => 'key', '{{VALUE}}' => 'val']],
+    ['queue-consumer.php', 'app/queue/TestDemoQueue.php', ['{{NAME}}' => 'TestDemo', '{{QUEUE_NAME}}' => 'test-demo', '{{DESCRIBE}}' => 'test', '{{DATE}}' => '2026-10-19']],
+    ['crontab-task.php', 'app/crontab/TestDemoTask.php', ['{{NAME}}' => 'TestDemo', '{{DATE}}' => '2026-10-19']],
+    ['dao.php', 'app/dao/TestDemoDao.php', ['{{NAME}}' => 'TestDemo', '{{TABLE}}' => 'test_demo', '{{FIELD}}' => 'name']],
+    ['http-middleware.php', 'app/middleware/TestDemoMiddleware.php', ['{{NAME}}' => 'TestDemo', '{{DATE}}' => '2026-10-19']],
+    ['process-plugin.php', 'app/process/TestDemoProcess.php', ['{{NAME}}' => 'TestDemo', '{{DATE}}' => '2026-10-19']],
 ];
 
 $srcDir = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets';
